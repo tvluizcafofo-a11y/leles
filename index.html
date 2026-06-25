@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leles Acessórios – Manutenção</title>
+  <!-- Font Awesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* ===== RESET E BASE ===== */
     * {
       margin: 0;
       padding: 0;
@@ -20,6 +23,7 @@
       min-height: 100vh;
       margin: 0;
       padding: 20px;
+      position: relative;
     }
 
     .container {
@@ -74,13 +78,375 @@
       margin-top: 20px;
       border-top: 1px solid #eee;
       padding-top: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .detalhe i {
       color: #c49a1f;
-      margin: 0 4px;
     }
 
+    .email-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .email-link {
+      color: #1e2b2f;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px dashed #c49a1f;
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .email-link:hover {
+      color: #c49a1f;
+      border-bottom-color: #1e2b2f;
+    }
+
+    .btn-copy {
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: color 0.3s, transform 0.2s;
+      padding: 4px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .btn-copy:hover {
+      color: #1e2b2f;
+      transform: scale(1.1);
+    }
+
+    .btn-copy.copied {
+      color: #2e7d32;
+    }
+
+    /* ===== BOTÃO ADMIN (inicialmente oculto) ===== */
+    .admin-toggle {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #1e2b2f;
+      color: #f1c40f;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      border: none;
+      z-index: 1000;
+    }
+
+    .admin-toggle.visible {
+      display: flex;
+    }
+
+    .admin-toggle:hover {
+      transform: rotate(90deg) scale(1.05);
+      background: #f1c40f;
+      color: #1e2b2f;
+    }
+
+    /* ===== ÁREA SECRETA ===== */
+    #secretArea {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 120px;
+      height: 120px;
+      z-index: 9999;
+      cursor: default;
+      background: transparent;
+      pointer-events: auto;
+    }
+
+    #clickFeedback {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(30, 43, 47, 0.85);
+      color: #f1c40f;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      z-index: 10001;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+
+    /* ===== MODAL ADMIN ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 35px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.3s ease;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal h2 {
+      font-size: 1.8rem;
+      color: #1e2b2f;
+      margin-bottom: 8px;
+    }
+
+    .modal h2 span {
+      color: #c49a1f;
+    }
+
+    .modal p {
+      font-size: 0.95rem;
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .modal label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      color: #1e2b2f;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .modal input,
+    .modal textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: 0.3s;
+      background: #fafaf8;
+      margin-bottom: 20px;
+      font-family: inherit;
+    }
+
+    .modal input:focus,
+    .modal textarea:focus {
+      border-color: #c49a1f;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(196, 154, 31, 0.15);
+    }
+
+    .modal textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .modal .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .modal .btn {
+      padding: 10px 28px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #1e2b2f;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #c49a1f;
+      color: #1e2b2f;
+    }
+
+    .btn-secondary {
+      background: #eee;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #ddd;
+    }
+
+    .modal .status-msg {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      color: #2e7d32;
+      display: none;
+    }
+
+    .modal .status-msg.error {
+      color: #c62828;
+    }
+
+    /* Abas no admin */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 8px 18px;
+      font-weight: 600;
+      color: #777;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .tab-btn.active {
+      background: #1e2b2f;
+      color: #fff;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: #eee;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Lista de mensagens */
+    .mensagem-item {
+      background: #f9f7f4;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      border-left: 4px solid #c49a1f;
+      text-align: left;
+    }
+
+    .mensagem-item strong {
+      display: block;
+      color: #1e2b2f;
+      margin-bottom: 4px;
+    }
+
+    .mensagem-item .meta {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .mensagem-item .msg {
+      color: #333;
+      margin-top: 6px;
+    }
+
+    .sem-mensagens {
+      text-align: center;
+      color: #999;
+      padding: 30px 0;
+    }
+
+    /* Status do GitHub */
+    .github-status {
+      font-size: 0.85rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .github-status.success {
+      display: block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+
+    .github-status.error {
+      display: block;
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+
+    .github-alert {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      color: #856404;
+      font-size: 0.9rem;
+    }
+
+    /* Contador de visitas */
+    .visitas-counter {
+      background: #f1f0ec;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 20px 0 10px;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #1e2b2f;
+    }
+
+    .visitas-counter span {
+      font-weight: 700;
+      color: #c49a1f;
+      font-size: 1.4rem;
+    }
+
+    /* ===== RESPONSIVO ===== */
     @media (max-width: 480px) {
       .container {
         padding: 30px 20px;
@@ -97,28 +463,409 @@
       p {
         font-size: 1rem;
       }
+
+      .admin-toggle {
+        width: 44px;
+        height: 44px;
+        font-size: 1.4rem;
+        bottom: 18px;
+        right: 18px;
+      }
+
+      .modal {
+        padding: 30px 20px;
+      }
+
+      #secretArea {
+        width: 80px;
+        height: 80px;
+      }
+
+      .detalhe {
+        flex-direction: column;
+        gap: 4px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- ===== ÁREA SECRETA ===== -->
+  <div id="secretArea" title="Clique 7 vezes aqui rapidamente"></div>
+  <div id="clickFeedback"></div>
+
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <div class="container">
-    <!-- Logo -->
     <div class="logo">
       <img src="LogoLeles.png" alt="Leles Acessórios Off-Road">
     </div>
-
-    <!-- Ícone de engrenagem (opcional, apenas para charme) -->
     <div class="icone">⚙️</div>
-
-    <!-- Título -->
     <h1>Em <span>Manutenção</span></h1>
-
-    <!-- Mensagem -->
-    <p>Estamos atualizando nosso site</p>
-    <p style="font-size: 1rem; color: #777;">Voltaremos em breve com novidades!</p>
-
-    <!-- Detalhe com contato rápido -->
-    
+    <p>Estamos em manutenção no site.</p>
+    <p style="font-size: 1rem; color: #777;">Voltaremos em breve!</p>
+    <div class="detalhe">
+      <i>📧</i>
+      <span class="email-wrapper">
+        <a href="mailto:contato@lelesoffroad.com" id="emailLink" class="email-link">contato@lelesoffroad.com</a>
+        <button class="btn-copy" id="copyEmailBtn" title="Copiar e-mail">
+          <i class="far fa-copy"></i>
+        </button>
+      </span>
+    </div>
   </div>
+
+  <!-- ===== BOTÃO ADMIN ===== -->
+  <button class="admin-toggle" id="adminToggle" aria-label="Configurações">⚙️</button>
+
+  <!-- ===== MODAL ADMIN ===== -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <h2>Painel <span>Admin</span></h2>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tabConfig">Configurações</button>
+        <button class="tab-btn" data-tab="tabMensagens">Mensagens</button>
+        <button class="tab-btn" data-tab="tabGitHub">GitHub</button>
+      </div>
+
+      <!-- Aba Configurações -->
+      <div id="tabConfig" class="tab-content active">
+        <p>Defina o e-mail de contato exibido no site.</p>
+        <form id="adminForm">
+          <label for="emailInput">E-mail de contato</label>
+          <input type="email" id="emailInput" placeholder="Digite o e-mail" required>
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" id="closeModalBtn">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </div>
+          <div id="statusMsg" class="status-msg">✅ E-mail salvo com sucesso!</div>
+        </form>
+
+        <!-- Contador de visitas (visível apenas para admin) -->
+        <div class="visitas-counter">
+          <i class="fas fa-eye" style="color:#c49a1f;"></i>
+          Total de visitas: <span id="visitasCount">0</span>
+        </div>
+      </div>
+
+      <!-- Aba Mensagens -->
+      <div id="tabMensagens" class="tab-content">
+        <p style="margin-bottom: 15px;">Mensagens salvas localmente (apenas neste dispositivo).</p>
+        <div id="listaMensagens"></div>
+      </div>
+
+      <!-- Aba GitHub -->
+      <div id="tabGitHub" class="tab-content">
+        <div class="github-alert">
+          <strong>⚠️ Atenção:</strong> As credenciais do GitHub são salvas <strong>apenas neste dispositivo</strong>.
+        </div>
+        <p>Configure as credenciais do repositório para criar issues automaticamente (funcionalidade legada).</p>
+        <form id="githubForm">
+          <label for="githubToken">Token de Acesso Pessoal (PAT)</label>
+          <input type="password" id="githubToken" placeholder="github_pat_xxx..." required>
+
+          <label for="githubOwner">Dono do repositório</label>
+          <input type="text" id="githubOwner" placeholder="leles" required>
+
+          <label for="githubRepo">Nome do repositório</label>
+          <input type="text" id="githubRepo" placeholder="leles" required>
+
+          <div id="githubStatus" class="github-status"></div>
+
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Salvar credenciais</button>
+            <button type="button" class="btn btn-secondary" id="testGitHubBtn">Testar conexão</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ===== REFERÊNCIAS =====
+      const adminToggle = document.getElementById('adminToggle');
+      const adminModal = document.getElementById('adminModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const adminForm = document.getElementById('adminForm');
+      const emailInput = document.getElementById('emailInput');
+      const emailLink = document.getElementById('emailLink');
+      const statusMsg = document.getElementById('statusMsg');
+      const listaMensagens = document.getElementById('listaMensagens');
+      const copyBtn = document.getElementById('copyEmailBtn');
+      const visitasSpan = document.getElementById('visitasCount');
+
+      const githubForm = document.getElementById('githubForm');
+      const githubToken = document.getElementById('githubToken');
+      const githubOwner = document.getElementById('githubOwner');
+      const githubRepo = document.getElementById('githubRepo');
+      const githubStatus = document.getElementById('githubStatus');
+      const testGitHubBtn = document.getElementById('testGitHubBtn');
+
+      const tabBtns = document.querySelectorAll('.tab-btn');
+
+      // ===== CHAVES localStorage =====
+      const STORAGE_EMAIL = 'leles_admin_email';
+      const STORAGE_MENSAGENS = 'leles_mensagens';
+      const STORAGE_GITHUB_TOKEN = 'leles_github_token';
+      const STORAGE_GITHUB_OWNER = 'leles_github_owner';
+      const STORAGE_GITHUB_REPO = 'leles_github_repo';
+      const STORAGE_VISITAS = 'leles_visitas';
+
+      // ===== CONTADOR DE VISITAS =====
+      function incrementarVisitas() {
+        let visitas = parseInt(localStorage.getItem(STORAGE_VISITAS) || '0', 10);
+        visitas += 1;
+        localStorage.setItem(STORAGE_VISITAS, String(visitas));
+        return visitas;
+      }
+
+      function atualizarVisitasAdmin() {
+        const visitas = parseInt(localStorage.getItem(STORAGE_VISITAS) || '0', 10);
+        visitasSpan.textContent = visitas;
+      }
+
+      // Incrementa a cada carregamento da página
+      const visitasAtuais = incrementarVisitas();
+
+      // ===== SISTEMA DE CLIQUE SECRETO =====
+      let clickCount = 0;
+      let clickTimer = null;
+      const secretArea = document.getElementById('secretArea');
+      const feedback = document.getElementById('clickFeedback');
+      const REQUIRED_CLICKS = 7;
+      const TIME_LIMIT = 2000;
+
+      function resetSecretCounter() {
+        clickCount = 0;
+        if (clickTimer) {
+          clearTimeout(clickTimer);
+          clickTimer = null;
+        }
+        feedback.style.display = 'none';
+      }
+
+      function showFeedback(text, isSuccess = false) {
+        feedback.textContent = text;
+        feedback.style.display = 'block';
+        feedback.style.background = isSuccess ? 'rgba(46, 125, 50, 0.9)' : 'rgba(30, 43, 47, 0.85)';
+        setTimeout(() => feedback.style.display = 'none', 1000);
+      }
+
+      secretArea.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (adminToggle.classList.contains('visible')) return;
+
+        if (clickCount === 0) {
+          clickTimer = setTimeout(() => {
+            resetSecretCounter();
+            showFeedback(`🔒 ${clickCount}/${REQUIRED_CLICKS} - tente novamente`);
+          }, TIME_LIMIT);
+        }
+
+        clickCount++;
+        showFeedback(`🔑 ${clickCount}/${REQUIRED_CLICKS}`);
+
+        if (clickCount === REQUIRED_CLICKS) {
+          clearTimeout(clickTimer);
+          clickTimer = null;
+          adminToggle.classList.add('visible');
+          showFeedback('✅ Acesso liberado!', true);
+          secretArea.style.display = 'none';
+          resetSecretCounter();
+          adminToggle.style.transform = 'scale(1.3)';
+          setTimeout(() => adminToggle.style.transform = '', 300);
+        }
+      });
+
+      // ===== FUNÇÕES =====
+
+      function loadEmail() {
+        const saved = localStorage.getItem(STORAGE_EMAIL) || 'contato@lelesoffroad.com';
+        emailLink.textContent = saved;
+        emailLink.href = 'mailto:' + saved;
+        emailInput.value = saved;
+      }
+
+      function saveEmail(email) {
+        localStorage.setItem(STORAGE_EMAIL, email);
+        emailLink.textContent = email;
+        emailLink.href = 'mailto:' + email;
+        statusMsg.style.display = 'block';
+        statusMsg.className = 'status-msg';
+        statusMsg.textContent = '✅ E-mail salvo com sucesso!';
+        setTimeout(() => statusMsg.style.display = 'none', 3000);
+      }
+
+      function loadMensagens() {
+        const mensagens = JSON.parse(localStorage.getItem(STORAGE_MENSAGENS) || '[]');
+        if (mensagens.length === 0) {
+          listaMensagens.innerHTML = '<div class="sem-mensagens">Nenhuma mensagem recebida ainda.</div>';
+          return;
+        }
+        const reversed = [...mensagens].reverse();
+        let html = '';
+        reversed.forEach(msg => {
+          html += `
+            <div class="mensagem-item">
+              <strong>${escapeHTML(msg.nome)}</strong>
+              <div class="meta">${escapeHTML(msg.email)} • ${msg.data}</div>
+              <div><strong>Assunto:</strong> ${escapeHTML(msg.assunto)}</div>
+              <div class="msg">${escapeHTML(msg.mensagem)}</div>
+            </div>
+          `;
+        });
+        listaMensagens.innerHTML = html;
+      }
+
+      function escapeHTML(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // ===== GITHUB =====
+
+      function loadGitHub() {
+        githubToken.value = localStorage.getItem(STORAGE_GITHUB_TOKEN) || '';
+        githubOwner.value = localStorage.getItem(STORAGE_GITHUB_OWNER) || '';
+        githubRepo.value = localStorage.getItem(STORAGE_GITHUB_REPO) || '';
+      }
+
+      function saveGitHub(token, owner, repo) {
+        localStorage.setItem(STORAGE_GITHUB_TOKEN, token);
+        localStorage.setItem(STORAGE_GITHUB_OWNER, owner);
+        localStorage.setItem(STORAGE_GITHUB_REPO, repo);
+      }
+
+      async function testGitHubConnection() {
+        const token = githubToken.value.trim();
+        const owner = githubOwner.value.trim();
+        const repo = githubRepo.value.trim();
+        if (!token || !owner || !repo) {
+          showGitHubStatus(false, 'Preencha todos os campos.');
+          return;
+        }
+        try {
+          const url = `https://api.github.com/repos/${owner}/${repo}`;
+          const response = await fetch(url, {
+            headers: {
+              'Authorization': `token ${token}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          });
+          if (response.ok) {
+            showGitHubStatus(true, '✅ Conexão bem-sucedida! Repositório encontrado.');
+          } else {
+            const data = await response.json();
+            showGitHubStatus(false, `❌ Erro: ${data.message || response.statusText}`);
+          }
+        } catch (error) {
+          showGitHubStatus(false, `❌ Erro de rede: ${error.message}`);
+        }
+      }
+
+      function showGitHubStatus(success, message) {
+        githubStatus.style.display = 'block';
+        githubStatus.className = 'github-status ' + (success ? 'success' : 'error');
+        githubStatus.textContent = message;
+        setTimeout(() => githubStatus.style.display = 'none', 5000);
+      }
+
+      // ===== COPIAR E-MAIL =====
+      copyBtn.addEventListener('click', async () => {
+        const email = emailLink.textContent;
+        try {
+          await navigator.clipboard.writeText(email);
+          copyBtn.classList.add('copied');
+          copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+          }, 2000);
+        } catch (err) {
+          // Fallback para navegadores antigos
+          const textarea = document.createElement('textarea');
+          textarea.value = email;
+          document.body.appendChild(textarea);
+          textarea.select();
+          try {
+            document.execCommand('copy');
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+              copyBtn.classList.remove('copied');
+              copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+            }, 2000);
+          } catch (e) {
+            alert('Não foi possível copiar. Copie manualmente: ' + email);
+          }
+          document.body.removeChild(textarea);
+        }
+      });
+
+      // ===== EVENTOS =====
+
+      adminToggle.addEventListener('click', () => {
+        adminModal.classList.add('active');
+        emailInput.value = localStorage.getItem(STORAGE_EMAIL) || 'contato@lelesoffroad.com';
+        statusMsg.style.display = 'none';
+        loadMensagens();
+        loadGitHub();
+        atualizarVisitasAdmin();
+        document.querySelector('.tab-btn.active')?.click();
+      });
+
+      closeModalBtn.addEventListener('click', () => adminModal.classList.remove('active'));
+      adminModal.addEventListener('click', (e) => {
+        if (e.target === adminModal) adminModal.classList.remove('active');
+      });
+
+      adminForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        if (!email || !email.includes('@') || !email.includes('.')) {
+          statusMsg.style.display = 'block';
+          statusMsg.className = 'status-msg error';
+          statusMsg.textContent = '❌ Digite um e-mail válido.';
+          return;
+        }
+        saveEmail(email);
+        setTimeout(() => adminModal.classList.remove('active'), 600);
+      });
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const tabId = btn.dataset.tab;
+          document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+          document.getElementById(tabId).classList.add('active');
+          if (tabId === 'tabMensagens') loadMensagens();
+          if (tabId === 'tabGitHub') loadGitHub();
+          if (tabId === 'tabConfig') atualizarVisitasAdmin();
+        });
+      });
+
+      githubForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const token = githubToken.value.trim();
+        const owner = githubOwner.value.trim();
+        const repo = githubRepo.value.trim();
+        if (!token || !owner || !repo) {
+          showGitHubStatus(false, 'Preencha todos os campos.');
+          return;
+        }
+        saveGitHub(token, owner, repo);
+        showGitHubStatus(true, '✅ Credenciais salvas com sucesso!');
+      });
+
+      testGitHubBtn.addEventListener('click', testGitHubConnection);
+
+      // ===== INICIALIZAÇÃO =====
+      loadEmail();
+      loadGitHub();
+      // Atualiza o contador na primeira abertura
+      atualizarVisitasAdmin();
+    })();
+  </script>
 </body>
 </html>
