@@ -160,7 +160,7 @@
       color: #1e2b2f;
     }
 
-    /* ===== ÁREA SECRETA ===== */
+    /* ===== ÁREA SECRETA (sem feedback) ===== */
     #secretArea {
       position: fixed;
       top: 0;
@@ -171,23 +171,6 @@
       cursor: default;
       background: transparent;
       pointer-events: auto;
-    }
-
-    #clickFeedback {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(30, 43, 47, 0.85);
-      color: #f1c40f;
-      padding: 8px 20px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      z-index: 10001;
-      display: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      pointer-events: none;
     }
 
     /* ===== MODAL ADMIN ===== */
@@ -491,7 +474,6 @@
 <body>
   <!-- ===== ÁREA SECRETA ===== -->
   <div id="secretArea" title="Clique 7 vezes aqui rapidamente"></div>
-  <div id="clickFeedback"></div>
 
   <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <div class="container">
@@ -626,11 +608,10 @@
       // Incrementa a cada carregamento da página
       const visitasAtuais = incrementarVisitas();
 
-      // ===== SISTEMA DE CLIQUE SECRETO =====
+      // ===== SISTEMA DE CLIQUE SECRETO (SEM FEEDBACK) =====
       let clickCount = 0;
       let clickTimer = null;
       const secretArea = document.getElementById('secretArea');
-      const feedback = document.getElementById('clickFeedback');
       const REQUIRED_CLICKS = 7;
       const TIME_LIMIT = 2000;
 
@@ -640,14 +621,6 @@
           clearTimeout(clickTimer);
           clickTimer = null;
         }
-        feedback.style.display = 'none';
-      }
-
-      function showFeedback(text, isSuccess = false) {
-        feedback.textContent = text;
-        feedback.style.display = 'block';
-        feedback.style.background = isSuccess ? 'rgba(46, 125, 50, 0.9)' : 'rgba(30, 43, 47, 0.85)';
-        setTimeout(() => feedback.style.display = 'none', 1000);
       }
 
       secretArea.addEventListener('click', (e) => {
@@ -657,18 +630,15 @@
         if (clickCount === 0) {
           clickTimer = setTimeout(() => {
             resetSecretCounter();
-            showFeedback(`🔒 ${clickCount}/${REQUIRED_CLICKS} - tente novamente`);
           }, TIME_LIMIT);
         }
 
         clickCount++;
-        showFeedback(`🔑 ${clickCount}/${REQUIRED_CLICKS}`);
 
         if (clickCount === REQUIRED_CLICKS) {
           clearTimeout(clickTimer);
           clickTimer = null;
           adminToggle.classList.add('visible');
-          showFeedback('✅ Acesso liberado!', true);
           secretArea.style.display = 'none';
           resetSecretCounter();
           adminToggle.style.transform = 'scale(1.3)';
@@ -863,7 +833,6 @@
       // ===== INICIALIZAÇÃO =====
       loadEmail();
       loadGitHub();
-      // Atualiza o contador na primeira abertura
       atualizarVisitasAdmin();
     })();
   </script>
