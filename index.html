@@ -40,7 +40,7 @@
     .logo img {
       max-width: 100%;
       height: auto;
-      max-height: 120px;
+      max-height: 300px;
       margin-bottom: 30px;
       display: block;
       margin-left: auto;
@@ -129,20 +129,20 @@
       color: #2e7d32;
     }
 
-    /* ===== BOTÃO ADMIN (inicialmente oculto) ===== */
+    /* ===== BOTÃO ADMIN (catraca) ===== */
     .admin-toggle {
       position: fixed;
       bottom: 25px;
       right: 25px;
       background: #1e2b2f;
       color: #f1c40f;
-      width: 50px;
-      height: 50px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: none;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
@@ -160,17 +160,24 @@
       color: #1e2b2f;
     }
 
-    /* ===== ÁREA SECRETA ===== */
-    #secretArea {
+    /* ===== ÁREAS SECRETAS ===== */
+    .secret-area {
       position: fixed;
       top: 0;
-      left: 0;
       width: 120px;
       height: 120px;
       z-index: 9999;
       cursor: default;
       background: transparent;
       pointer-events: auto;
+    }
+
+    #secretLeft {
+      left: 0;
+    }
+
+    #secretRight {
+      right: 0;
     }
 
     /* ===== MODAL ADMIN ===== */
@@ -235,8 +242,7 @@
       font-size: 0.95rem;
     }
 
-    .modal input,
-    .modal textarea {
+    .modal input {
       width: 100%;
       padding: 12px 16px;
       border: 1px solid #ddd;
@@ -248,16 +254,10 @@
       font-family: inherit;
     }
 
-    .modal input:focus,
-    .modal textarea:focus {
+    .modal input:focus {
       border-color: #c49a1f;
       outline: none;
       box-shadow: 0 0 0 4px rgba(196, 154, 31, 0.15);
-    }
-
-    .modal textarea {
-      height: 100px;
-      resize: vertical;
     }
 
     .modal .btn-group {
@@ -294,6 +294,15 @@
 
     .btn-secondary:hover {
       background: #ddd;
+    }
+
+    .btn-close-config {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .btn-close-config:hover {
+      background: #c82333;
     }
 
     .modal .status-msg {
@@ -344,39 +353,6 @@
 
     .tab-content.active {
       display: block;
-    }
-
-    /* Lista de mensagens */
-    .mensagem-item {
-      background: #f9f7f4;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 12px;
-      border-left: 4px solid #c49a1f;
-      text-align: left;
-    }
-
-    .mensagem-item strong {
-      display: block;
-      color: #1e2b2f;
-      margin-bottom: 4px;
-    }
-
-    .mensagem-item .meta {
-      font-size: 0.8rem;
-      color: #888;
-      margin-bottom: 6px;
-    }
-
-    .mensagem-item .msg {
-      color: #333;
-      margin-top: 6px;
-    }
-
-    .sem-mensagens {
-      text-align: center;
-      color: #999;
-      padding: 30px 0;
     }
 
     /* Status do GitHub */
@@ -440,7 +416,7 @@
       }
 
       .logo img {
-        max-height: 80px;
+        max-height: 200px;
       }
 
       p {
@@ -448,8 +424,8 @@
       }
 
       .admin-toggle {
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         font-size: 1.4rem;
         bottom: 18px;
         right: 18px;
@@ -459,7 +435,7 @@
         padding: 30px 20px;
       }
 
-      #secretArea {
+      .secret-area {
         width: 80px;
         height: 80px;
       }
@@ -472,13 +448,14 @@
   </style>
 </head>
 <body>
-  <!-- ===== ÁREA SECRETA ===== -->
-  <div id="secretArea" title="Clique 7 vezes aqui rapidamente"></div>
+  <!-- ===== ÁREAS SECRETAS ===== -->
+  <div id="secretLeft" class="secret-area" title="Clique 7 vezes aqui"></div>
+  <div id="secretRight" class="secret-area" title="Clique 7 vezes aqui"></div>
 
   <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <div class="container">
     <div class="logo">
-      <img src="LogoLeles.png" alt="Leles Acessórios Off-Road">
+      <img src="logoleles.jpeg" alt="Leles Acessórios Off-Road">
     </div>
     <div class="icone">⚙️</div>
     <h1>Em <span>Manutenção</span></h1>
@@ -495,7 +472,7 @@
     </div>
   </div>
 
-  <!-- ===== BOTÃO ADMIN ===== -->
+  <!-- ===== BOTÃO ADMIN (catraca) ===== -->
   <button class="admin-toggle" id="adminToggle" aria-label="Configurações">⚙️</button>
 
   <!-- ===== MODAL ADMIN ===== -->
@@ -504,34 +481,25 @@
       <h2>Painel <span>Admin</span></h2>
       <div class="tabs">
         <button class="tab-btn active" data-tab="tabConfig">Configurações</button>
-        <button class="tab-btn" data-tab="tabMensagens">Mensagens</button>
         <button class="tab-btn" data-tab="tabGitHub">GitHub</button>
       </div>
 
       <!-- Aba Configurações -->
       <div id="tabConfig" class="tab-content active">
-        <p>Defina o e-mail de contato exibido no site.</p>
-        <form id="adminForm">
-          <label for="emailInput">E-mail de contato</label>
-          <input type="email" id="emailInput" placeholder="Digite o e-mail" required>
-          <div class="btn-group">
-            <button type="button" class="btn btn-secondary" id="closeModalBtn">Fechar</button>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-          </div>
-          <div id="statusMsg" class="status-msg">✅ E-mail salvo com sucesso!</div>
-        </form>
-
+        <p style="margin-bottom: 15px;">Informações do site.</p>
+        
         <!-- Contador de visitas -->
         <div class="visitas-counter">
           <i class="fas fa-eye" style="color:#c49a1f;"></i>
           Total de visitas: <span id="visitasCount">0</span>
         </div>
-      </div>
 
-      <!-- Aba Mensagens -->
-      <div id="tabMensagens" class="tab-content">
-        <p style="margin-bottom: 15px;">Mensagens salvas localmente (apenas neste dispositivo).</p>
-        <div id="listaMensagens"></div>
+        <!-- Botão Fechar na Configuração -->
+        <div class="btn-group" style="margin-top: 20px;">
+          <button class="btn btn-close-config" id="closeConfigBtn">
+            <i class="fas fa-times"></i> Fechar
+          </button>
+        </div>
       </div>
 
       <!-- Aba GitHub -->
@@ -539,7 +507,7 @@
         <div class="github-alert">
           <strong>⚠️ Atenção:</strong> As credenciais do GitHub são salvas <strong>apenas neste dispositivo</strong>.
         </div>
-        <p>Configure as credenciais do repositório para criar issues automaticamente (funcionalidade legada).</p>
+        <p>Configure as credenciais do repositório para criar issues automaticamente.</p>
         <form id="githubForm">
           <label for="githubToken">Token de Acesso Pessoal (PAT)</label>
           <input type="password" id="githubToken" placeholder="github_pat_xxx..." required>
@@ -567,13 +535,10 @@
       const adminToggle = document.getElementById('adminToggle');
       const adminModal = document.getElementById('adminModal');
       const closeModalBtn = document.getElementById('closeModalBtn');
-      const adminForm = document.getElementById('adminForm');
-      const emailInput = document.getElementById('emailInput');
-      const emailLink = document.getElementById('emailLink');
-      const statusMsg = document.getElementById('statusMsg');
-      const listaMensagens = document.getElementById('listaMensagens');
+      const closeConfigBtn = document.getElementById('closeConfigBtn');
       const copyBtn = document.getElementById('copyEmailBtn');
       const visitasSpan = document.getElementById('visitasCount');
+      const emailLink = document.getElementById('emailLink');
 
       const githubForm = document.getElementById('githubForm');
       const githubToken = document.getElementById('githubToken');
@@ -585,8 +550,6 @@
       const tabBtns = document.querySelectorAll('.tab-btn');
 
       // ===== CHAVES localStorage =====
-      const STORAGE_EMAIL = 'leles_admin_email';
-      const STORAGE_MENSAGENS = 'leles_mensagens';
       const STORAGE_GITHUB_TOKEN = 'leles_github_token';
       const STORAGE_GITHUB_OWNER = 'leles_github_owner';
       const STORAGE_GITHUB_REPO = 'leles_github_repo';
@@ -602,102 +565,103 @@
 
       function atualizarVisitasAdmin() {
         const visitas = parseInt(localStorage.getItem(STORAGE_VISITAS) || '0', 10);
-        visitasSpan.textContent = visitas;
+        if (visitasSpan) {
+          visitasSpan.textContent = visitas;
+        }
       }
 
       // Incrementa a cada carregamento da página
-      const visitasAtuais = incrementarVisitas();
+      incrementarVisitas();
 
-      // ===== SISTEMA DE CLIQUE SECRETO (SEM FEEDBACK) =====
-      let clickCount = 0;
+      // ===== E-MAIL FIXO =====
+      const EMAIL_FIXO = 'leles4x4@yahoo.com.br';
+      if (emailLink) {
+        emailLink.textContent = EMAIL_FIXO;
+        emailLink.href = 'mailto:' + EMAIL_FIXO;
+      }
+
+      // ===== SISTEMA DE CLIQUE SECRETO (ESQUERDA + DIREITA) =====
+      let leftClicks = 0;
+      let rightClicks = 0;
       let clickTimer = null;
-      const secretArea = document.getElementById('secretArea');
-      const REQUIRED_CLICKS = 7;
+      const secretLeft = document.getElementById('secretLeft');
+      const secretRight = document.getElementById('secretRight');
+      const REQUIRED = 7;
       const TIME_LIMIT = 2000;
 
-      function resetSecretCounter() {
-        clickCount = 0;
+      function resetSecret() {
+        leftClicks = 0;
+        rightClicks = 0;
         if (clickTimer) {
           clearTimeout(clickTimer);
           clickTimer = null;
         }
       }
 
-      secretArea.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (adminToggle.classList.contains('visible')) return;
+      function checkUnlock() {
+        if (leftClicks >= REQUIRED && rightClicks >= REQUIRED) {
+          clearTimeout(clickTimer);
+          clickTimer = null;
+          if (adminToggle) {
+            adminToggle.classList.add('visible');
+          }
+          if (secretLeft) secretLeft.style.display = 'none';
+          if (secretRight) secretRight.style.display = 'none';
+          resetSecret();
+          if (adminToggle) {
+            adminToggle.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+              if (adminToggle) adminToggle.style.transform = '';
+            }, 300);
+          }
+        }
+      }
 
-        if (clickCount === 0) {
+      function handleSecretClick(side) {
+        if (!adminToggle || adminToggle.classList.contains('visible')) return;
+
+        if (leftClicks === 0 && rightClicks === 0) {
           clickTimer = setTimeout(() => {
-            resetSecretCounter();
+            resetSecret();
           }, TIME_LIMIT);
         }
 
-        clickCount++;
+        if (side === 'left') {
+          leftClicks++;
+        } else if (side === 'right') {
+          rightClicks++;
+        }
 
-        if (clickCount === REQUIRED_CLICKS) {
+        if (clickTimer) {
           clearTimeout(clickTimer);
-          clickTimer = null;
-          adminToggle.classList.add('visible');
-          secretArea.style.display = 'none';
-          resetSecretCounter();
-          adminToggle.style.transform = 'scale(1.3)';
-          setTimeout(() => adminToggle.style.transform = '', 300);
+          clickTimer = setTimeout(() => {
+            resetSecret();
+          }, TIME_LIMIT);
         }
-      });
 
-      // ===== FUNÇÕES =====
-
-      function loadEmail() {
-        const saved = localStorage.getItem(STORAGE_EMAIL) || 'leles4x4@yahoo.com.br';
-        emailLink.textContent = saved;
-        emailLink.href = 'mailto:' + saved;
-        emailInput.value = saved;
+        checkUnlock();
       }
 
-      function saveEmail(email) {
-        localStorage.setItem(STORAGE_EMAIL, email);
-        emailLink.textContent = email;
-        emailLink.href = 'mailto:' + email;
-        statusMsg.style.display = 'block';
-        statusMsg.className = 'status-msg';
-        statusMsg.textContent = '✅ E-mail salvo com sucesso!';
-        setTimeout(() => statusMsg.style.display = 'none', 3000);
-      }
-
-      function loadMensagens() {
-        const mensagens = JSON.parse(localStorage.getItem(STORAGE_MENSAGENS) || '[]');
-        if (mensagens.length === 0) {
-          listaMensagens.innerHTML = '<div class="sem-mensagens">Nenhuma mensagem recebida ainda.</div>';
-          return;
-        }
-        const reversed = [...mensagens].reverse();
-        let html = '';
-        reversed.forEach(msg => {
-          html += `
-            <div class="mensagem-item">
-              <strong>${escapeHTML(msg.nome)}</strong>
-              <div class="meta">${escapeHTML(msg.email)} • ${msg.data}</div>
-              <div><strong>Assunto:</strong> ${escapeHTML(msg.assunto)}</div>
-              <div class="msg">${escapeHTML(msg.mensagem)}</div>
-            </div>
-          `;
+      if (secretLeft) {
+        secretLeft.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleSecretClick('left');
         });
-        listaMensagens.innerHTML = html;
       }
 
-      function escapeHTML(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+      if (secretRight) {
+        secretRight.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleSecretClick('right');
+        });
       }
 
       // ===== GITHUB =====
 
       function loadGitHub() {
-        githubToken.value = localStorage.getItem(STORAGE_GITHUB_TOKEN) || '';
-        githubOwner.value = localStorage.getItem(STORAGE_GITHUB_OWNER) || '';
-        githubRepo.value = localStorage.getItem(STORAGE_GITHUB_REPO) || '';
+        if (githubToken) githubToken.value = localStorage.getItem(STORAGE_GITHUB_TOKEN) || '';
+        if (githubOwner) githubOwner.value = localStorage.getItem(STORAGE_GITHUB_OWNER) || '';
+        if (githubRepo) githubRepo.value = localStorage.getItem(STORAGE_GITHUB_REPO) || '';
       }
 
       function saveGitHub(token, owner, repo) {
@@ -707,9 +671,9 @@
       }
 
       async function testGitHubConnection() {
-        const token = githubToken.value.trim();
-        const owner = githubOwner.value.trim();
-        const repo = githubRepo.value.trim();
+        const token = githubToken ? githubToken.value.trim() : '';
+        const owner = githubOwner ? githubOwner.value.trim() : '';
+        const repo = githubRepo ? githubRepo.value.trim() : '';
         if (!token || !owner || !repo) {
           showGitHubStatus(false, 'Preencha todos os campos.');
           return;
@@ -734,104 +698,126 @@
       }
 
       function showGitHubStatus(success, message) {
-        githubStatus.style.display = 'block';
-        githubStatus.className = 'github-status ' + (success ? 'success' : 'error');
-        githubStatus.textContent = message;
-        setTimeout(() => githubStatus.style.display = 'none', 5000);
+        if (githubStatus) {
+          githubStatus.style.display = 'block';
+          githubStatus.className = 'github-status ' + (success ? 'success' : 'error');
+          githubStatus.textContent = message;
+          setTimeout(() => {
+            if (githubStatus) githubStatus.style.display = 'none';
+          }, 5000);
+        }
       }
 
       // ===== COPIAR E-MAIL =====
-      copyBtn.addEventListener('click', async () => {
-        const email = emailLink.textContent;
-        try {
-          await navigator.clipboard.writeText(email);
-          copyBtn.classList.add('copied');
-          copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-          setTimeout(() => {
-            copyBtn.classList.remove('copied');
-            copyBtn.innerHTML = '<i class="far fa-copy"></i>';
-          }, 2000);
-        } catch (err) {
-          // Fallback para navegadores antigos
-          const textarea = document.createElement('textarea');
-          textarea.value = email;
-          document.body.appendChild(textarea);
-          textarea.select();
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+          const email = EMAIL_FIXO;
           try {
-            document.execCommand('copy');
+            await navigator.clipboard.writeText(email);
             copyBtn.classList.add('copied');
             copyBtn.innerHTML = '<i class="fas fa-check"></i>';
             setTimeout(() => {
               copyBtn.classList.remove('copied');
               copyBtn.innerHTML = '<i class="far fa-copy"></i>';
             }, 2000);
-          } catch (e) {
-            alert('Não foi possível copiar. Copie manualmente: ' + email);
+          } catch (err) {
+            const textarea = document.createElement('textarea');
+            textarea.value = email;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+              document.execCommand('copy');
+              copyBtn.classList.add('copied');
+              copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+              setTimeout(() => {
+                copyBtn.classList.remove('copied');
+                copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+              }, 2000);
+            } catch (e) {
+              alert('Não foi possível copiar. Copie manualmente: ' + email);
+            }
+            document.body.removeChild(textarea);
           }
-          document.body.removeChild(textarea);
+        });
+      }
+
+      // ===== FUNÇÃO PARA FECHAR MODAL =====
+      function fecharModal() {
+        if (adminModal) {
+          adminModal.classList.remove('active');
         }
-      });
+      }
 
       // ===== EVENTOS =====
 
-      adminToggle.addEventListener('click', () => {
-        adminModal.classList.add('active');
-        emailInput.value = localStorage.getItem(STORAGE_EMAIL) || 'leles4x4@yahoo.com.br';
-        statusMsg.style.display = 'none';
-        loadMensagens();
-        loadGitHub();
-        atualizarVisitasAdmin();
-        document.querySelector('.tab-btn.active')?.click();
-      });
-
-      closeModalBtn.addEventListener('click', () => adminModal.classList.remove('active'));
-      adminModal.addEventListener('click', (e) => {
-        if (e.target === adminModal) adminModal.classList.remove('active');
-      });
-
-      adminForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = emailInput.value.trim();
-        if (!email || !email.includes('@') || !email.includes('.')) {
-          statusMsg.style.display = 'block';
-          statusMsg.className = 'status-msg error';
-          statusMsg.textContent = '❌ Digite um e-mail válido.';
-          return;
-        }
-        saveEmail(email);
-        setTimeout(() => adminModal.classList.remove('active'), 600);
-      });
-
-      tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          tabBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const tabId = btn.dataset.tab;
-          document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-          document.getElementById(tabId).classList.add('active');
-          if (tabId === 'tabMensagens') loadMensagens();
-          if (tabId === 'tabGitHub') loadGitHub();
-          if (tabId === 'tabConfig') atualizarVisitasAdmin();
+      if (adminToggle) {
+        adminToggle.addEventListener('click', () => {
+          if (adminModal) {
+            adminModal.classList.add('active');
+          }
+          loadGitHub();
+          atualizarVisitasAdmin();
+          // Ativar a primeira aba
+          const primeiroTab = document.querySelector('.tab-btn.active');
+          if (primeiroTab) {
+            primeiroTab.click();
+          }
         });
-      });
+      }
 
-      githubForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const token = githubToken.value.trim();
-        const owner = githubOwner.value.trim();
-        const repo = githubRepo.value.trim();
-        if (!token || !owner || !repo) {
-          showGitHubStatus(false, 'Preencha todos os campos.');
-          return;
-        }
-        saveGitHub(token, owner, repo);
-        showGitHubStatus(true, '✅ Credenciais salvas com sucesso!');
-      });
+      // Botão Fechar do modal (já existente)
+      if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', fecharModal);
+      }
 
-      testGitHubBtn.addEventListener('click', testGitHubConnection);
+      // Botão Fechar na aba Configurações
+      if (closeConfigBtn) {
+        closeConfigBtn.addEventListener('click', fecharModal);
+      }
+
+      if (adminModal) {
+        adminModal.addEventListener('click', (e) => {
+          if (e.target === adminModal) {
+            fecharModal();
+          }
+        });
+      }
+
+      if (tabBtns) {
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabId = btn.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            if (tabId === 'tabGitHub') loadGitHub();
+            if (tabId === 'tabConfig') atualizarVisitasAdmin();
+          });
+        });
+      }
+
+      if (githubForm) {
+        githubForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const token = githubToken ? githubToken.value.trim() : '';
+          const owner = githubOwner ? githubOwner.value.trim() : '';
+          const repo = githubRepo ? githubRepo.value.trim() : '';
+          if (!token || !owner || !repo) {
+            showGitHubStatus(false, 'Preencha todos os campos.');
+            return;
+          }
+          saveGitHub(token, owner, repo);
+          showGitHubStatus(true, '✅ Credenciais salvas com sucesso!');
+        });
+      }
+
+      if (testGitHubBtn) {
+        testGitHubBtn.addEventListener('click', testGitHubConnection);
+      }
 
       // ===== INICIALIZAÇÃO =====
-      loadEmail();
       loadGitHub();
       atualizarVisitasAdmin();
     })();
