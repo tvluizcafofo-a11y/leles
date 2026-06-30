@@ -400,32 +400,24 @@
       font-size: 0.9rem;
     }
 
-    /* Contador de visitas */
-    .visitas-counter {
+    /* Contador do MegaContador na área de configuração */
+    .contador-config {
       background: #0a0a0f;
-      padding: 15px;
+      padding: 15px 20px;
       border-radius: 12px;
-      margin: 20px 0 10px;
+      margin: 15px 0 20px;
       text-align: center;
-      font-size: 1.1rem;
-      color: #e8e0d5;
       border: 1px solid #2a2a3a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
-    .visitas-counter span {
-      font-weight: 700;
-      color: #f1c40f;
-      font-size: 1.4rem;
-    }
-
-    .visitas-counter .loading {
-      opacity: 0.6;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
+    .contador-config img {
+      max-width: 100%;
+      height: auto;
+      border: none;
     }
 
     /* ===== RESPONSIVO ===== */
@@ -509,12 +501,13 @@
 
       <!-- Aba Configurações -->
       <div id="tabConfig" class="tab-content active">
-        <p style="margin-bottom: 15px;">Informações do site.</p>
+        <p style="margin-bottom: 10px;">Informações do site.</p>
         
-        <!-- Contador de visitas -->
-        <div class="visitas-counter">
-          <i class="fas fa-eye" style="color:#f1c40f;"></i>
-          Total de visitas: <span id="visitasCount">0</span>
+        <!-- Contador do MegaContador na área de configuração -->
+        <div class="contador-config">
+          <a title="Contador de Visitas do MegaContador" href="https://megacontador.com.br/">
+            <img src="https://megacontador.com.br/img-VraSSjdhW2Ma3tKR-6.gif" border="0" alt="Contador de visitas">
+          </a>
         </div>
 
         <!-- Botão Fechar na Configuração -->
@@ -554,17 +547,12 @@
 
   <script>
     (function() {
-      // ===== CONFIGURAÇÃO COUNTAPI =====
-      const SITE_ID = 'leles-acessorios';
-      const VISITAS_KEY = 'leles_visita_contada';
-
       // ===== REFERÊNCIAS =====
       const adminToggle = document.getElementById('adminToggle');
       const adminModal = document.getElementById('adminModal');
       const closeModalBtn = document.getElementById('closeModalBtn');
       const closeConfigBtn = document.getElementById('closeConfigBtn');
       const copyBtn = document.getElementById('copyEmailBtn');
-      const visitasSpan = document.getElementById('visitasCount');
       const emailLink = document.getElementById('emailLink');
 
       const githubForm = document.getElementById('githubForm');
@@ -580,104 +568,6 @@
       const STORAGE_GITHUB_TOKEN = 'leles_github_token';
       const STORAGE_GITHUB_OWNER = 'leles_github_owner';
       const STORAGE_GITHUB_REPO = 'leles_github_repo';
-
-      // ===== FUNÇÃO PARA BUSCAR CONTADOR =====
-      async function getVisitasCount() {
-        try {
-          // Usando a URL correta do CountAPI
-          const response = await fetch(`https://api.countapi.xyz/get/${SITE_ID}`);
-          if (!response.ok) {
-            // Se o contador não existir, retorna 0
-            if (response.status === 404) {
-              return 0;
-            }
-            throw new Error(`Erro HTTP: ${response.status}`);
-          }
-          const data = await response.json();
-          return data.value || 0;
-        } catch (error) {
-          console.error('Erro ao buscar contador:', error);
-          // Se houver erro, retorna o valor do fallback
-          const fallback = parseInt(localStorage.getItem('leles_visitas_fallback') || '0', 10);
-          return fallback;
-        }
-      }
-
-      // ===== FUNÇÃO PARA INCREMENTAR CONTADOR =====
-      async function incrementarVisitas() {
-        try {
-          // Verifica se já contou esta visita (evita duplicatas)
-          const jaContou = localStorage.getItem(VISITAS_KEY);
-          if (jaContou === 'true') {
-            // Se já contou, apenas retorna o valor atual
-            return await getVisitasCount();
-          }
-
-          // Tenta incrementar no CountAPI
-          try {
-            const response = await fetch(`https://api.countapi.xyz/hit/${SITE_ID}`);
-            if (!response.ok) {
-              throw new Error(`Erro HTTP: ${response.status}`);
-            }
-            const data = await response.json();
-            
-            // Marca que esta visita já foi contada
-            localStorage.setItem(VISITAS_KEY, 'true');
-            
-            return data.value || 0;
-          } catch (apiError) {
-            console.error('Erro ao incrementar no CountAPI:', apiError);
-            
-            // Fallback: contador local
-            let visitas = parseInt(localStorage.getItem('leles_visitas_fallback') || '0', 10);
-            visitas += 1;
-            localStorage.setItem('leles_visitas_fallback', String(visitas));
-            localStorage.setItem(VISITAS_KEY, 'true');
-            return visitas;
-          }
-        } catch (error) {
-          console.error('Erro ao incrementar visitas:', error);
-          // Fallback seguro
-          const fallback = parseInt(localStorage.getItem('leles_visitas_fallback') || '0', 10);
-          return fallback;
-        }
-      }
-
-      // ===== ATUALIZAR VISITAS NO ADMIN =====
-      async function atualizarVisitasAdmin(showLoading = true) {
-        if (!visitasSpan) return;
-
-        if (showLoading) {
-          visitasSpan.textContent = '...';
-          visitasSpan.className = 'loading';
-        }
-
-        try {
-          const total = await incrementarVisitas();
-          visitasSpan.textContent = total;
-          visitasSpan.className = '';
-        } catch (error) {
-          console.error('Erro ao atualizar visitas:', error);
-          const fallback = localStorage.getItem('leles_visitas_fallback') || '0';
-          visitasSpan.textContent = fallback;
-          visitasSpan.className = '';
-        }
-      }
-
-      // ===== FUNÇÃO PARA INICIALIZAR O CONTADOR NA PÁGINA =====
-      async function inicializarContador() {
-        try {
-          // Primeiro, verifica se já contou esta visita
-          const jaContou = localStorage.getItem(VISITAS_KEY);
-          
-          if (!jaContou) {
-            // Se não contou, tenta incrementar
-            await incrementarVisitas();
-          }
-        } catch (error) {
-          console.error('Erro ao inicializar contador:', error);
-        }
-      }
 
       // ===== E-MAIL FIXO =====
       const EMAIL_FIXO = 'leles4x4@yahoo.com.br';
@@ -862,7 +752,6 @@
             adminModal.classList.add('active');
           }
           loadGitHub();
-          atualizarVisitasAdmin(true);
           // Ativar a primeira aba
           const primeiroTab = document.querySelector('.tab-btn.active');
           if (primeiroTab) {
@@ -899,7 +788,6 @@
             const target = document.getElementById(tabId);
             if (target) target.classList.add('active');
             if (tabId === 'tabGitHub') loadGitHub();
-            if (tabId === 'tabConfig') atualizarVisitasAdmin(true);
           });
         });
       }
@@ -924,17 +812,6 @@
       }
 
       // ===== INICIALIZAÇÃO =====
-      // Inicializa o contador quando a página carregar
-      document.addEventListener('DOMContentLoaded', async () => {
-        await inicializarContador();
-        
-        // Se o modal estiver aberto, atualiza o contador
-        if (adminModal && adminModal.classList.contains('active')) {
-          await atualizarVisitasAdmin(true);
-        }
-      });
-
-      // Carrega configurações do GitHub
       loadGitHub();
 
     })();
