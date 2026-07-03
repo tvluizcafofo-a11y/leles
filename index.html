@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leles Acessórios – Manutenção</title>
-  <!-- Font Awesome para ícones -->
+  <title>Leles Acessórios</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     /* ===== RESET E BASE ===== */
@@ -17,67 +16,221 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #0a0a0f;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      margin: 0;
       padding: 20px;
-      position: relative;
     }
 
     .container {
+      max-width: 1200px;
+      margin: 0 auto;
       background: #1a1a24;
-      padding: 50px 40px;
+      padding: 40px;
       border-radius: 24px;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-      text-align: center;
-      max-width: 600px;
-      width: 100%;
       border: 1px solid #2a2a3a;
     }
 
-    .logo img {
-      max-width: 100%;
-      height: auto;
-      max-height: 300px;
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 30px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2a2a3a;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    h1 {
-      font-size: 2.4rem;
+    .logo img {
+      height: 300px;
+      width: auto;
+      border-radius: 16px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-admin {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      background: #2a2a3a;
+      color: #f1c40f;
+      border: 1px solid #3a3a4a;
+      border-radius: 50px;
       font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-admin:hover {
+      background: #f1c40f;
+      color: #1a1a24;
+      border-color: #f1c40f;
+      transform: translateY(-2px);
+    }
+
+    .btn-gallery {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      background: #f1c40f;
+      color: #1a1a24;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-gallery:hover {
+      background: #e0b50e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);
+    }
+
+    /* ===== ÁREAS SECRETAS ===== */
+    .secret-area {
+      position: fixed;
+      top: 0;
+      width: 120px;
+      height: 120px;
+      z-index: 9999;
+      cursor: default;
+      background: transparent;
+      pointer-events: auto;
+    }
+
+    #secretLeft { left: 0; }
+    #secretRight { right: 0; }
+
+    /* ===== MENSAGEM DA PÁGINA INICIAL ===== */
+    .mensagem-inicial {
+      background: #0a0a0f;
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 30px;
+      border: 1px solid #2a2a3a;
+      color: #b0a8a0;
+      font-size: 1rem;
+      line-height: 1.6;
+      min-height: 50px;
+      text-align: center;
+    }
+
+    .mensagem-inicial i {
+      color: #f1c40f;
+      margin-right: 8px;
+    }
+
+    /* ===== MINIATURAS ===== */
+    .miniaturas-section {
+      margin-bottom: 30px;
+    }
+
+    .miniaturas-section h2 {
       color: #e8e0d5;
-      margin-bottom: 12px;
-      letter-spacing: -0.5px;
-    }
-
-    h1 span {
-      color: #f1c40f;
-    }
-
-    .icone {
-      font-size: 4rem;
-      color: #f1c40f;
+      font-size: 1.4rem;
       margin-bottom: 20px;
     }
 
-    p {
-      font-size: 1.2rem;
-      color: #b0a8a0;
-      line-height: 1.6;
-      margin-bottom: 8px;
+    .miniaturas-section h2 i {
+      color: #f1c40f;
+      margin-right: 10px;
     }
 
+    .miniaturas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .miniatura-item {
+      background: #0a0a0f;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #2a2a3a;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      aspect-ratio: 1 / 1;
+    }
+
+    .miniatura-item:hover {
+      transform: translateY(-5px);
+      border-color: #f1c40f;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .miniatura-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .miniatura-item .miniatura-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+      color: #e8e0d5;
+      font-size: 0.7rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      text-align: center;
+    }
+
+    .miniatura-item:hover .miniatura-overlay {
+      opacity: 1;
+    }
+
+    .miniatura-item .github-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #f1c40f;
+      padding: 3px 6px;
+      border-radius: 10px;
+      font-size: 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .miniaturas-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #666680;
+      padding: 40px 20px;
+    }
+
+    .miniaturas-empty i {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 15px;
+      color: #f1c40f;
+    }
+
+    /* ===== DETALHE ===== */
     .detalhe {
       font-size: 0.95rem;
       color: #8888a0;
-      margin-top: 20px;
+      padding-top: 20px;
       border-top: 1px solid #2a2a3a;
-      padding-top: 25px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -129,89 +282,488 @@
       color: #4caf50;
     }
 
-    /* ===== BOTÃO ADMIN (catraca) ===== */
-    .admin-toggle {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: #2a2a3a;
-      color: #f1c40f;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s ease;
-      border: 1px solid #3a3a4a;
-      z-index: 1000;
-    }
-
-    .admin-toggle.visible {
-      display: flex;
-    }
-
-    .admin-toggle:hover {
-      transform: rotate(90deg) scale(1.05);
-      background: #f1c40f;
-      color: #1a1a24;
-      border-color: #f1c40f;
-    }
-
-    /* ===== ÁREAS SECRETAS ===== */
-    .secret-area {
-      position: fixed;
-      top: 0;
-      width: 120px;
-      height: 120px;
-      z-index: 9999;
-      cursor: default;
-      background: transparent;
-      pointer-events: auto;
-    }
-
-    #secretLeft {
-      left: 0;
-    }
-
-    #secretRight {
-      right: 0;
-    }
-
-    /* ===== MODAL ADMIN ===== */
-    .modal-overlay {
+    /* ===== GALERIA MODAL ===== */
+    .gallery-modal {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 3000;
       align-items: center;
       justify-content: center;
-      z-index: 2000;
+      padding: 0;
     }
 
-    .modal-overlay.active {
+    .gallery-modal.active {
       display: flex;
     }
 
-    .modal {
+    .gallery-content {
+      background: transparent;
+      width: 100%;
+      height: 100vh;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.8);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .gallery-header h2 {
+      color: #f1c40f;
+      font-size: 1.4rem;
+    }
+
+    .gallery-header h2 i {
+      margin-right: 10px;
+    }
+
+    .gallery-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* BOTÃO VOLTAR DA GALERIA - VERSÃO OTIMIZADA */
+    .btn-voltar-gallery {
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-voltar-gallery:hover {
+      background: #1b5e20;
+      transform: scale(1.05);
+    }
+
+    .gallery-scroll-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 10px 20px 20px 20px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gallery-scroll-wrapper::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .gallery-scroll-wrapper::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .gallery-scroll-wrapper::-webkit-scrollbar-thumb {
+      background: #f1c40f;
+      border-radius: 10px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      padding-bottom: 10px;
+    }
+
+    .gallery-item {
+      background: #0a0a0f;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #2a2a3a;
+      transition: all 0.3s ease;
+      position: relative;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      border-color: #f1c40f;
+      box-shadow: 0 4px 20px rgba(241, 196, 15, 0.2);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .gallery-item .item-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+      color: #e8e0d5;
+      font-size: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .gallery-item:hover .item-overlay {
+      opacity: 1;
+    }
+
+    .gallery-item .item-overlay .item-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
+    }
+
+    .gallery-item .item-overlay .github-icon {
+      color: #f1c40f;
+      font-size: 0.7rem;
+    }
+
+    .gallery-item .file-error {
+      color: #ef5350;
+      font-size: 0.8rem;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .gallery-empty {
+      text-align: center;
+      color: #666680;
+      padding: 60px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .gallery-empty i {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 20px;
+      color: #f1c40f;
+    }
+
+    .contador-midias {
+      color: #8888a0;
+      font-size: 0.85rem;
+      padding: 5px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+    }
+
+    /* ===== LIGHTBOX TELA CHEIA ===== */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.97);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      cursor: default;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 95vw;
+      max-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .lightbox-content img {
+      max-width: 95vw;
+      max-height: 85vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .lightbox-content video {
+      max-width: 95vw;
+      max-height: 85vh;
+      border-radius: 8px;
+    }
+
+    /* BOTÃO VOLTAR DO LIGHTBOX */
+    .lightbox-voltar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10000;
+    }
+
+    .lightbox-voltar:hover {
+      background: #1b5e20;
+      transform: scale(1.05);
+    }
+
+    .lightbox-counter {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #8888a0;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px 20px;
+      border-radius: 20px;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(0, 0, 0, 0.9);
+      transform: scale(1.1);
+    }
+
+    .lightbox-nav.prev { left: 20px; }
+    .lightbox-nav.next { right: 20px; }
+
+    /* ===== BOTÕES DO LIGHTBOX ===== */
+    .lightbox-buttons {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .btn-lightbox {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.9;
+    }
+
+    .btn-lightbox:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    .btn-download {
+      background: rgba(241, 196, 15, 0.9);
+      color: #1a1a24;
+    }
+
+    .btn-download:hover {
+      background: #f1c40f;
+      box-shadow: 0 4px 20px rgba(241, 196, 15, 0.3);
+    }
+
+    .btn-share {
+      background: rgba(76, 175, 80, 0.9);
+      color: #fff;
+    }
+
+    .btn-share:hover {
+      background: #4caf50;
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    .btn-lightbox.hidden {
+      display: none;
+    }
+
+    /* ===== MODAL DE COMPARTILHAMENTO ===== */
+    .share-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .share-modal.active {
+      display: flex;
+    }
+
+    .share-modal-content {
       background: #1a1a24;
       border-radius: 24px;
-      padding: 40px 35px;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      animation: fadeIn 0.3s ease;
-      position: relative;
-      max-height: 90vh;
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 80vh;
       overflow-y: auto;
       border: 1px solid #2a2a3a;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .share-modal-content h2 {
+      color: #f1c40f;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .share-modal-content h2 i {
+      margin-right: 10px;
+    }
+
+    .share-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .share-item {
+      background: #0a0a0f;
+      border: 1px solid #2a2a3a;
+      border-radius: 16px;
+      padding: 15px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #b0a8a0;
+    }
+
+    .share-item:hover {
+      transform: translateY(-3px);
+      border-color: #f1c40f;
+      background: #1a1a24;
+    }
+
+    .share-item i {
+      font-size: 2rem;
+    }
+
+    .share-item .share-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .share-item.whatsapp i { color: #25D366; }
+    .share-item.telegram i { color: #0088cc; }
+    .share-item.email i { color: #ea4335; }
+    .share-item.facebook i { color: #1877f2; }
+    .share-item.twitter i { color: #1da1f2; }
+    .share-item.instagram i { color: #e4405f; }
+    .share-item.linkedin i { color: #0a66c2; }
+    .share-item.pinterest i { color: #bd081c; }
+    .share-item.copy i { color: #f1c40f; }
+    .share-item.more i { color: #8888a0; }
+
+    .share-close {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #c62828;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .share-close:hover {
+      background: #b71c1c;
+      transform: scale(1.02);
     }
 
     @keyframes fadeIn {
@@ -219,246 +771,46 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    .modal h2 {
-      font-size: 1.8rem;
-      color: #e8e0d5;
-      margin-bottom: 8px;
-    }
-
-    .modal h2 span {
-      color: #f1c40f;
-    }
-
-    .modal p {
-      font-size: 0.95rem;
-      color: #b0a8a0;
-      margin-bottom: 25px;
-    }
-
-    .modal label {
-      display: block;
-      text-align: left;
-      font-weight: 600;
-      color: #e8e0d5;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #2a2a3a;
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: 0.3s;
-      background: #0a0a0f;
-      color: #e8e0d5;
-      margin-bottom: 20px;
-      font-family: inherit;
-    }
-
-    .modal input:focus {
-      border-color: #f1c40f;
-      outline: none;
-      box-shadow: 0 0 0 4px rgba(241, 196, 15, 0.15);
-    }
-
-    .modal input::placeholder {
-      color: #666680;
-    }
-
-    .modal .btn-group {
-      display: flex;
-      gap: 12px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
-
-    .modal .btn {
-      padding: 10px 28px;
-      border: none;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-      background: #f1c40f;
-      color: #1a1a24;
-    }
-
-    .btn-primary:hover {
-      background: #e0b50e;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);
-    }
-
-    .btn-secondary {
-      background: #2a2a3a;
-      color: #b0a8a0;
-    }
-
-    .btn-secondary:hover {
-      background: #3a3a4a;
-      color: #e8e0d5;
-    }
-
-    .btn-close-config {
-      background: #c62828;
-      color: #fff;
-    }
-
-    .btn-close-config:hover {
-      background: #b71c1c;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
-    }
-
-    .modal .status-msg {
-      margin-top: 18px;
-      font-size: 0.9rem;
-      color: #4caf50;
-      display: none;
-    }
-
-    .modal .status-msg.error {
-      color: #ef5350;
-    }
-
-    /* Abas no admin */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 25px;
-      border-bottom: 2px solid #2a2a3a;
-      padding-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      background: none;
-      border: none;
-      padding: 8px 18px;
-      font-weight: 600;
-      color: #8888a0;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 0.95rem;
-    }
-
-    .tab-btn.active {
-      background: #f1c40f;
-      color: #1a1a24;
-    }
-
-    .tab-btn:hover:not(.active) {
-      background: #2a2a3a;
-      color: #e8e0d5;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Status do GitHub */
-    .github-status {
-      font-size: 0.85rem;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      display: none;
-    }
-
-    .github-status.success {
-      display: block;
-      background: #1a3a1a;
-      color: #4caf50;
-      border: 1px solid #2a5a2a;
-    }
-
-    .github-status.error {
-      display: block;
-      background: #3a1a1a;
-      color: #ef5350;
-      border: 1px solid #5a2a2a;
-    }
-
-    .github-alert {
-      background: #2a2a1a;
-      border-left: 4px solid #f1c40f;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      color: #c8b88a;
-      font-size: 0.9rem;
-    }
-
-    /* Contador do MegaContador na área de configuração */
-    .contador-config {
-      background: #0a0a0f;
-      padding: 15px 20px;
-      border-radius: 12px;
-      margin: 15px 0 20px;
-      text-align: center;
-      border: 1px solid #2a2a3a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .contador-config img {
-      max-width: 100%;
-      height: auto;
-      border: none;
-    }
-
     /* ===== RESPONSIVO ===== */
+    @media (max-width: 768px) {
+      .container { padding: 20px; }
+      .header { flex-direction: column; align-items: stretch; gap: 15px; }
+      .logo { justify-content: center; }
+      .logo img { height: 210px; }
+      .header-actions { justify-content: center; }
+      .miniaturas-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+      .lightbox-nav { width: 40px; height: 40px; font-size: 1rem; }
+      .lightbox-nav.prev { left: 10px; }
+      .lightbox-nav.next { right: 10px; }
+      .lightbox-voltar { top: 15px; right: 15px; padding: 8px 16px; font-size: 0.85rem; }
+      .lightbox-buttons { bottom: 20px; gap: 8px; }
+      .btn-lightbox { padding: 8px 16px; font-size: 0.8rem; }
+      .share-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .share-item { padding: 12px 8px; }
+      .share-item i { font-size: 1.6rem; }
+    }
+
     @media (max-width: 480px) {
-      .container {
-        padding: 30px 20px;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      .logo img {
-        max-height: 200px;
-      }
-
-      p {
-        font-size: 1rem;
-      }
-
-      .admin-toggle {
-        width: 38px;
-        height: 38px;
-        font-size: 1.4rem;
-        bottom: 18px;
-        right: 18px;
-      }
-
-      .modal {
-        padding: 30px 20px;
-      }
-
-      .secret-area {
-        width: 80px;
-        height: 80px;
-      }
-
-      .detalhe {
-        flex-direction: column;
-        gap: 4px;
-      }
+      .container { padding: 15px; }
+      .logo img { height: 150px; }
+      .btn-gallery, .btn-admin { padding: 8px 16px; font-size: 0.85rem; }
+      .miniaturas-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+      .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+      .lightbox-nav { width: 36px; height: 36px; font-size: 0.9rem; }
+      .lightbox-nav.prev { left: 8px; }
+      .lightbox-nav.next { right: 8px; }
+      .lightbox-voltar { top: 12px; right: 12px; padding: 6px 12px; font-size: 0.75rem; gap: 4px; }
+      .gallery-content { padding: 0; }
+      .gallery-header { padding: 10px 15px; }
+      .gallery-header h2 { font-size: 1.1rem; }
+      .gallery-scroll-wrapper { padding: 8px 10px 10px 10px; }
+      .lightbox-buttons { bottom: 15px; gap: 6px; }
+      .btn-lightbox { padding: 6px 12px; font-size: 0.7rem; }
+      .share-modal-content { padding: 20px; }
+      .share-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .share-item i { font-size: 1.4rem; }
+      .share-item .share-name { font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -467,15 +819,35 @@
   <div id="secretLeft" class="secret-area" title="Clique 7 vezes aqui"></div>
   <div id="secretRight" class="secret-area" title="Clique 7 vezes aqui"></div>
 
-  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <div class="container">
-    <div class="logo">
-      <img src="logoleles-3d2.jpeg" alt="Leles Acessórios Off-Road">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo">
+        <img src="logoleles-3d2.jpeg" alt="Leles Acessórios" id="logoImg">
+      </div>
+      <div class="header-actions">
+        <button class="btn-gallery" id="openGalleryBtn">
+          <i class="fas fa-images"></i> Ver Galeria
+        </button>
+        <a href="admin.html" class="btn-admin" id="adminLink" style="display:none;">
+          <i class="fas fa-cog"></i> Admin
+        </a>
+      </div>
     </div>
-    <div class="icone">⚙️</div>
-    <h1>Em <span>Manutenção</span></h1>
-    <p>Estamos em manutenção no site.</p>
-    <p style="font-size: 1rem; color: #666680;">Voltaremos em breve!</p>
+
+    <!-- MENSAGEM DA PÁGINA INICIAL -->
+    <div class="mensagem-inicial" id="mensagemInicial">
+      <i class="fas fa-quote-left"></i>
+      <span id="mensagemTexto">Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.</span>
+    </div>
+
+    <!-- MINIATURAS -->
+    <div class="miniaturas-section">
+      <h2><i class="fas fa-th"></i> Destaques</h2>
+      <div class="miniaturas-grid" id="miniaturasGrid"></div>
+    </div>
+
+    <!-- DETALHE -->
     <div class="detalhe">
       <i>📧</i>
       <span class="email-wrapper">
@@ -487,332 +859,850 @@
     </div>
   </div>
 
-  <!-- ===== BOTÃO ADMIN (catraca) ===== -->
-  <button class="admin-toggle" id="adminToggle" aria-label="Configurações">⚙️</button>
-
-  <!-- ===== MODAL ADMIN ===== -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal">
-      <h2>Painel <span>Admin</span></h2>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="tabConfig">Configurações</button>
-        <button class="tab-btn" data-tab="tabGitHub">GitHub</button>
-      </div>
-
-      <!-- Aba Configurações -->
-      <div id="tabConfig" class="tab-content active">
-        <p style="margin-bottom: 10px;">Informações do site.</p>
-        
-        <!-- Contador do MegaContador na área de configuração -->
-        <div class="contador-config">
-          <a title="Contador de Visitas do MegaContador" href="https://megacontador.com.br/">
-            <img src="https://megacontador.com.br/img-VraSSjdhW2Ma3tKR-6.gif" border="0" alt="Contador de visitas">
-          </a>
-        </div>
-
-        <!-- Botão Fechar na Configuração -->
-        <div class="btn-group" style="margin-top: 20px;">
-          <button class="btn btn-close-config" id="closeConfigBtn">
-            <i class="fas fa-times"></i> Fechar
+  <!-- ===== GALERIA MODAL ===== -->
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-content">
+      <div class="gallery-header">
+        <h2><i class="fas fa-images"></i> Galeria</h2>
+        <div class="gallery-actions">
+          <span class="contador-midias" id="contadorMidias">0 arquivos</span>
+          <!-- BOTÃO VOLTAR - COM ID ÚNICO E ONCLICK DIRETO -->
+          <button class="btn-voltar-gallery" id="btnVoltarGaleria">
+            <i class="fas fa-arrow-left"></i> Voltar
           </button>
         </div>
       </div>
-
-      <!-- Aba GitHub -->
-      <div id="tabGitHub" class="tab-content">
-        <div class="github-alert">
-          <strong>⚠️ Atenção:</strong> As credenciais do GitHub são salvas <strong>apenas neste dispositivo</strong>.
-        </div>
-        <p>Configure as credenciais do repositório para criar issues automaticamente.</p>
-        <form id="githubForm">
-          <label for="githubToken">Token de Acesso Pessoal (PAT)</label>
-          <input type="password" id="githubToken" placeholder="github_pat_xxx..." required>
-
-          <label for="githubOwner">Dono do repositório</label>
-          <input type="text" id="githubOwner" placeholder="leles" required>
-
-          <label for="githubRepo">Nome do repositório</label>
-          <input type="text" id="githubRepo" placeholder="leles" required>
-
-          <div id="githubStatus" class="github-status"></div>
-
-          <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Salvar credenciais</button>
-            <button type="button" class="btn btn-secondary" id="testGitHubBtn">Testar conexão</button>
-          </div>
-        </form>
+      <div class="gallery-scroll-wrapper">
+        <div class="gallery-grid" id="galleryGrid"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== LIGHTBOX TELA CHEIA ===== -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-voltar" id="lightboxVoltar">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+    <button class="lightbox-nav prev" id="lightboxPrev">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="lightbox-nav next" id="lightboxNext">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    <div class="lightbox-content" id="lightboxContent"></div>
+    <div class="lightbox-counter" id="lightboxCounter"></div>
+    <div class="lightbox-buttons">
+      <button class="btn-lightbox btn-download" id="btnDownload">
+        <i class="fas fa-download"></i> Baixar
+      </button>
+      <button class="btn-lightbox btn-share" id="btnShare">
+        <i class="fas fa-share-alt"></i> Compartilhar
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL DE COMPARTILHAMENTO ===== -->
+  <div class="share-modal" id="shareModal">
+    <div class="share-modal-content">
+      <h2><i class="fas fa-share-alt"></i> Compartilhar</h2>
+      <div class="share-grid" id="shareGrid"></div>
+      <button class="share-close" id="shareClose">Fechar</button>
     </div>
   </div>
 
   <script>
     (function() {
-      // ===== REFERÊNCIAS =====
-      const adminToggle = document.getElementById('adminToggle');
-      const adminModal = document.getElementById('adminModal');
-      const closeModalBtn = document.getElementById('closeModalBtn');
-      const closeConfigBtn = document.getElementById('closeConfigBtn');
-      const copyBtn = document.getElementById('copyEmailBtn');
-      const emailLink = document.getElementById('emailLink');
+      'use strict';
 
-      const githubForm = document.getElementById('githubForm');
-      const githubToken = document.getElementById('githubToken');
-      const githubOwner = document.getElementById('githubOwner');
-      const githubRepo = document.getElementById('githubRepo');
-      const githubStatus = document.getElementById('githubStatus');
-      const testGitHubBtn = document.getElementById('testGitHubBtn');
+      // ============================================================
+      // 1. REFERÊNCIAS DOS ELEMENTOS
+      // ============================================================
+      const DOM = {
+        // Áreas secretas
+        secretLeft: document.getElementById('secretLeft'),
+        secretRight: document.getElementById('secretRight'),
+        adminLink: document.getElementById('adminLink'),
+        
+        // Cabeçalho
+        openGalleryBtn: document.getElementById('openGalleryBtn'),
+        
+        // Mensagem
+        mensagemTexto: document.getElementById('mensagemTexto'),
+        
+        // Miniaturas
+        miniaturasGrid: document.getElementById('miniaturasGrid'),
+        
+        // Galeria
+        galleryModal: document.getElementById('galleryModal'),
+        galleryGrid: document.getElementById('galleryGrid'),
+        contadorMidias: document.getElementById('contadorMidias'),
+        btnVoltarGaleria: document.getElementById('btnVoltarGaleria'),
+        
+        // Lightbox
+        lightbox: document.getElementById('lightbox'),
+        lightboxContent: document.getElementById('lightboxContent'),
+        lightboxVoltar: document.getElementById('lightboxVoltar'),
+        lightboxPrev: document.getElementById('lightboxPrev'),
+        lightboxNext: document.getElementById('lightboxNext'),
+        lightboxCounter: document.getElementById('lightboxCounter'),
+        btnDownload: document.getElementById('btnDownload'),
+        btnShare: document.getElementById('btnShare'),
+        
+        // Compartilhamento
+        shareModal: document.getElementById('shareModal'),
+        shareGrid: document.getElementById('shareGrid'),
+        shareClose: document.getElementById('shareClose'),
+        
+        // Email
+        copyBtn: document.getElementById('copyEmailBtn'),
+        emailLink: document.getElementById('emailLink')
+      };
 
-      const tabBtns = document.querySelectorAll('.tab-btn');
-
-      // ===== CHAVES localStorage =====
-      const STORAGE_GITHUB_TOKEN = 'leles_github_token';
-      const STORAGE_GITHUB_OWNER = 'leles_github_owner';
-      const STORAGE_GITHUB_REPO = 'leles_github_repo';
-
-      // ===== E-MAIL FIXO =====
+      // ============================================================
+      // 2. CONSTANTES
+      // ============================================================
+      const STORAGE_GALLERY = 'leles_gallery_files_v13';
+      const STORAGE_MENSAGEM = 'leles_mensagem_inicial';
       const EMAIL_FIXO = 'leles4x4@yahoo.com.br';
-      if (emailLink) {
-        emailLink.textContent = EMAIL_FIXO;
-        emailLink.href = 'mailto:' + EMAIL_FIXO;
+      const REQUIRED_CLICKS = 7;
+      const TIME_LIMIT = 2000;
+      const MINIATURAS_QTD = 4;
+
+      // ============================================================
+      // 3. ESTADO DO APP
+      // ============================================================
+      const state = {
+        galleryFiles: [],
+        lightboxFiles: [],
+        lightboxIndex: 0,
+        currentLightboxFile: null,
+        shareImageData: null,
+        isGalleryOpen: false,
+        isLightboxOpen: false,
+        leftClicks: 0,
+        rightClicks: 0,
+        clickTimer: null
+      };
+
+      // ============================================================
+      // 4. FUNÇÕES AUXILIARES
+      // ============================================================
+      function log(msg) {
+        console.log('[Leles App]', msg);
       }
 
-      // ===== SISTEMA DE CLIQUE SECRETO (ESQUERDA + DIREITA) =====
-      let leftClicks = 0;
-      let rightClicks = 0;
-      let clickTimer = null;
-      const secretLeft = document.getElementById('secretLeft');
-      const secretRight = document.getElementById('secretRight');
-      const REQUIRED = 7;
-      const TIME_LIMIT = 2000;
+      function showAlert(msg) {
+        alert(msg);
+      }
 
-      function resetSecret() {
-        leftClicks = 0;
-        rightClicks = 0;
-        if (clickTimer) {
-          clearTimeout(clickTimer);
-          clickTimer = null;
+      // ============================================================
+      // 5. SISTEMA DE CLIQUE SECRETO (7+7)
+      // ============================================================
+      function resetSecretClicks() {
+        state.leftClicks = 0;
+        state.rightClicks = 0;
+        if (state.clickTimer) {
+          clearTimeout(state.clickTimer);
+          state.clickTimer = null;
         }
       }
 
-      function checkUnlock() {
-        if (leftClicks >= REQUIRED && rightClicks >= REQUIRED) {
-          clearTimeout(clickTimer);
-          clickTimer = null;
-          if (adminToggle) {
-            adminToggle.classList.add('visible');
-          }
-          if (secretLeft) secretLeft.style.display = 'none';
-          if (secretRight) secretRight.style.display = 'none';
-          resetSecret();
-          if (adminToggle) {
-            adminToggle.style.transform = 'scale(1.3)';
+      function checkUnlockAdmin() {
+        if (state.leftClicks >= REQUIRED_CLICKS && state.rightClicks >= REQUIRED_CLICKS) {
+          clearTimeout(state.clickTimer);
+          state.clickTimer = null;
+          if (DOM.adminLink) {
+            DOM.adminLink.style.display = 'inline-flex';
+            DOM.adminLink.style.transform = 'scale(1.3)';
             setTimeout(() => {
-              if (adminToggle) adminToggle.style.transform = '';
+              if (DOM.adminLink) DOM.adminLink.style.transform = '';
             }, 300);
           }
+          if (DOM.secretLeft) DOM.secretLeft.style.display = 'none';
+          if (DOM.secretRight) DOM.secretRight.style.display = 'none';
+          resetSecretClicks();
+          log('Admin liberado!');
         }
       }
 
       function handleSecretClick(side) {
-        if (!adminToggle || adminToggle.classList.contains('visible')) return;
+        if (DOM.adminLink && DOM.adminLink.style.display === 'inline-flex') return;
 
-        if (leftClicks === 0 && rightClicks === 0) {
-          clickTimer = setTimeout(() => {
-            resetSecret();
-          }, TIME_LIMIT);
+        if (state.leftClicks === 0 && state.rightClicks === 0) {
+          state.clickTimer = setTimeout(resetSecretClicks, TIME_LIMIT);
         }
 
-        if (side === 'left') {
-          leftClicks++;
-        } else if (side === 'right') {
-          rightClicks++;
+        if (side === 'left') state.leftClicks++;
+        else if (side === 'right') state.rightClicks++;
+
+        if (state.clickTimer) {
+          clearTimeout(state.clickTimer);
+          state.clickTimer = setTimeout(resetSecretClicks, TIME_LIMIT);
         }
 
-        if (clickTimer) {
-          clearTimeout(clickTimer);
-          clickTimer = setTimeout(() => {
-            resetSecret();
-          }, TIME_LIMIT);
-        }
-
-        checkUnlock();
+        checkUnlockAdmin();
       }
 
-      if (secretLeft) {
-        secretLeft.addEventListener('click', (e) => {
+      if (DOM.secretLeft) {
+        DOM.secretLeft.addEventListener('click', (e) => {
           e.stopPropagation();
           handleSecretClick('left');
         });
       }
 
-      if (secretRight) {
-        secretRight.addEventListener('click', (e) => {
+      if (DOM.secretRight) {
+        DOM.secretRight.addEventListener('click', (e) => {
           e.stopPropagation();
           handleSecretClick('right');
         });
       }
 
-      // ===== GITHUB =====
-
-      function loadGitHub() {
-        if (githubToken) githubToken.value = localStorage.getItem(STORAGE_GITHUB_TOKEN) || '';
-        if (githubOwner) githubOwner.value = localStorage.getItem(STORAGE_GITHUB_OWNER) || '';
-        if (githubRepo) githubRepo.value = localStorage.getItem(STORAGE_GITHUB_REPO) || '';
+      // ============================================================
+      // 6. MENSAGEM
+      // ============================================================
+      function loadMensagem() {
+        const saved = localStorage.getItem(STORAGE_MENSAGEM);
+        if (saved && saved.trim() !== '') {
+          DOM.mensagemTexto.textContent = saved;
+        } else {
+          DOM.mensagemTexto.textContent = 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
+        }
       }
 
-      function saveGitHub(token, owner, repo) {
-        localStorage.setItem(STORAGE_GITHUB_TOKEN, token);
-        localStorage.setItem(STORAGE_GITHUB_OWNER, owner);
-        localStorage.setItem(STORAGE_GITHUB_REPO, repo);
+      // ============================================================
+      // 7. GALERIA - CARREGAR E SALVAR
+      // ============================================================
+      function loadGalleryData() {
+        try {
+          const saved = localStorage.getItem(STORAGE_GALLERY);
+          state.galleryFiles = saved ? JSON.parse(saved) : [];
+        } catch (e) {
+          state.galleryFiles = [];
+          log('Erro ao carregar galeria:', e);
+        }
+        renderGallery();
+        renderMiniaturas();
       }
 
-      async function testGitHubConnection() {
-        const token = githubToken ? githubToken.value.trim() : '';
-        const owner = githubOwner ? githubOwner.value.trim() : '';
-        const repo = githubRepo ? githubRepo.value.trim() : '';
-        if (!token || !owner || !repo) {
-          showGitHubStatus(false, 'Preencha todos os campos.');
+      function saveGalleryData() {
+        try {
+          const metadata = state.galleryFiles.map(f => ({
+            id: f.id,
+            name: f.name,
+            type: f.type,
+            path: f.path || f.name,
+            isGitHub: f.isGitHub || false,
+            gitUrl: f.gitUrl || null
+          }));
+          localStorage.setItem(STORAGE_GALLERY, JSON.stringify(metadata));
+        } catch (e) {
+          log('Erro ao salvar galeria:', e);
+        }
+        renderGallery();
+        renderMiniaturas();
+      }
+
+      // ============================================================
+      // 8. RENDERIZAR MINIATURAS (4 IMAGENS)
+      // ============================================================
+      function renderMiniaturas() {
+        if (!DOM.miniaturasGrid) return;
+
+        const imagens = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
+        const miniaturas = imagens.slice(0, MINIATURAS_QTD);
+
+        if (miniaturas.length === 0) {
+          DOM.miniaturasGrid.innerHTML = `
+            <div class="miniaturas-empty">
+              <i class="fas fa-images"></i>
+              <p>Nenhuma imagem disponível.</p>
+              <p style="font-size:0.8rem;color:#666;">Acesse o Admin para adicionar imagens.</p>
+            </div>
+          `;
           return;
         }
-        try {
-          const url = `https://api.github.com/repos/${owner}/${repo}`;
-          const response = await fetch(url, {
-            headers: {
-              'Authorization': `token ${token}`,
-              'Accept': 'application/vnd.github.v3+json'
+
+        let html = '';
+        miniaturas.forEach((file, index) => {
+          const fileUrl = file.dataUrl || file.gitUrl || file.path;
+          const isGitHub = file.isGitHub;
+          html += `
+            <div class="miniatura-item" data-index="${index}">
+              <img src="${fileUrl}" alt="${file.name}" loading="lazy" onerror="this.style.display='none'">
+              ${isGitHub ? '<div class="github-badge"><i class="fab fa-github"></i></div>' : ''}
+              <div class="miniatura-overlay">${file.name.length > 18 ? file.name.substring(0, 16) + '...' : file.name}</div>
+            </div>
+          `;
+        });
+
+        DOM.miniaturasGrid.innerHTML = html;
+
+        DOM.miniaturasGrid.querySelectorAll('.miniatura-item').forEach((item, index) => {
+          item.addEventListener('click', function() {
+            const imagensList = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
+            const fileId = imagensList[index]?.id;
+            if (fileId) {
+              const galleryIndex = state.galleryFiles.findIndex(f => f.id === fileId);
+              if (galleryIndex !== -1) {
+                abrirGaleria();
+                setTimeout(() => {
+                  fecharGaleria();
+                  abrirLightbox(galleryIndex);
+                }, 150);
+              }
             }
           });
-          if (response.ok) {
-            showGitHubStatus(true, '✅ Conexão bem-sucedida! Repositório encontrado.');
-          } else {
-            const data = await response.json();
-            showGitHubStatus(false, `❌ Erro: ${data.message || response.statusText}`);
+        });
+      }
+
+      // ============================================================
+      // 9. RENDERIZAR GALERIA
+      // ============================================================
+      function renderGallery() {
+        if (!DOM.galleryGrid) return;
+
+        if (state.galleryFiles.length === 0) {
+          DOM.galleryGrid.innerHTML = `
+            <div class="gallery-empty">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Nenhuma mídia na galeria.</p>
+              <p style="font-size:0.9rem;color:#666;">Acesse o Admin para adicionar imagens.</p>
+            </div>
+          `;
+          DOM.contadorMidias.textContent = '0 arquivos';
+          return;
+        }
+
+        let html = '';
+        state.galleryFiles.forEach((file, index) => {
+          const isVideo = file.type.startsWith('video/');
+          const fileUrl = file.dataUrl || file.gitUrl || file.path;
+          const sourceIcon = file.isGitHub ? '<i class="fab fa-github github-icon"></i>' : '';
+
+          html += `
+            <div class="gallery-item" data-index="${index}" data-id="${file.id}">
+              ${isVideo ? 
+                `<video muted><source src="${fileUrl}" type="${file.type}"></video>` : 
+                `<img src="${fileUrl}" alt="${file.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'file-error\\'><i class=\\'fas fa-exclamation-triangle\\'></i><br>Erro ao carregar</div>'">`
+              }
+              <div class="item-overlay">
+                <span class="item-name">${file.name}</span>
+                ${sourceIcon}
+              </div>
+            </div>
+          `;
+        });
+
+        DOM.galleryGrid.innerHTML = html;
+        DOM.contadorMidias.textContent = `${state.galleryFiles.length} arquivo${state.galleryFiles.length > 1 ? 's' : ''}`;
+
+        DOM.galleryGrid.querySelectorAll('.gallery-item').forEach(item => {
+          item.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            fecharGaleria();
+            abrirLightbox(index);
+          });
+        });
+      }
+
+      // ============================================================
+      // 10. GALERIA - ABRIR/FECHAR
+      // ============================================================
+      function abrirGaleria() {
+        if (DOM.galleryModal) {
+          DOM.galleryModal.classList.add('active');
+          state.isGalleryOpen = true;
+          document.body.style.overflow = 'hidden';
+          log('Galeria aberta');
+        }
+      }
+
+      function fecharGaleria() {
+        if (DOM.galleryModal) {
+          DOM.galleryModal.classList.remove('active');
+          state.isGalleryOpen = false;
+          document.body.style.overflow = '';
+          log('Galeria fechada');
+        }
+      }
+
+      // ============================================================
+      // 11. LIGHTBOX - ABRIR/FECHAR/NAVEGAR
+      // ============================================================
+      function abrirLightbox(index) {
+        state.lightboxFiles = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
+        if (state.lightboxFiles.length === 0) return;
+
+        const currentFile = state.galleryFiles[index];
+        const imageIndex = state.lightboxFiles.findIndex(f => f.id === currentFile.id);
+        state.lightboxIndex = imageIndex !== -1 ? imageIndex : 0;
+
+        mostrarImagemLightbox();
+        if (DOM.lightbox) {
+          DOM.lightbox.classList.add('active');
+          state.isLightboxOpen = true;
+          document.body.style.overflow = 'hidden';
+          log('Lightbox aberto');
+        }
+        if (state.isGalleryOpen) {
+          fecharGaleria();
+        }
+      }
+
+      function mostrarImagemLightbox() {
+        const file = state.lightboxFiles[state.lightboxIndex];
+        if (!file) return;
+
+        state.currentLightboxFile = file;
+        state.shareImageData = file;
+        const fileUrl = file.dataUrl || file.gitUrl || file.path;
+
+        if (DOM.lightboxContent) {
+          DOM.lightboxContent.innerHTML = `<img src="${fileUrl}" alt="${file.name}" style="max-width:95vw;max-height:85vh;width:auto;height:auto;object-fit:contain;display:block;">`;
+        }
+        if (DOM.lightboxCounter) {
+          DOM.lightboxCounter.textContent = `${state.lightboxIndex + 1} / ${state.lightboxFiles.length}`;
+        }
+        if (DOM.btnDownload) DOM.btnDownload.classList.remove('hidden');
+        if (DOM.btnShare) DOM.btnShare.classList.remove('hidden');
+      }
+
+      function fecharLightbox() {
+        if (DOM.lightbox) {
+          DOM.lightbox.classList.remove('active');
+          state.isLightboxOpen = false;
+          document.body.style.overflow = '';
+        }
+        if (DOM.lightboxContent) DOM.lightboxContent.innerHTML = '';
+        if (DOM.btnDownload) DOM.btnDownload.classList.add('hidden');
+        if (DOM.btnShare) DOM.btnShare.classList.add('hidden');
+        state.currentLightboxFile = null;
+        state.shareImageData = null;
+        log('Lightbox fechado');
+      }
+
+      function voltarDoLightbox() {
+        fecharLightbox();
+        if (state.galleryFiles.length > 0) {
+          abrirGaleria();
+        } else {
+          voltarParaPaginaPrincipal();
+        }
+      }
+
+      function navegarLightbox(direcao) {
+        state.lightboxIndex += direcao;
+        if (state.lightboxIndex < 0) state.lightboxIndex = state.lightboxFiles.length - 1;
+        if (state.lightboxIndex >= state.lightboxFiles.length) state.lightboxIndex = 0;
+        mostrarImagemLightbox();
+      }
+
+      // ============================================================
+      // 12. VOLTAR PARA A PÁGINA PRINCIPAL (AÇÃO PRINCIPAL)
+      // ============================================================
+      function voltarParaPaginaPrincipal() {
+        // ALERT DE TESTE
+        showAlert('apertou');
+        log('Voltar para página principal');
+
+        // Fechar galeria
+        fecharGaleria();
+
+        // Fechar lightbox
+        fecharLightbox();
+
+        // Fechar compartilhamento
+        if (DOM.shareModal && DOM.shareModal.classList.contains('active')) {
+          DOM.shareModal.classList.remove('active');
+        }
+
+        // Resetar estado
+        state.currentLightboxFile = null;
+        state.shareImageData = null;
+        state.lightboxFiles = [];
+        state.lightboxIndex = 0;
+
+        // Redirecionar para a página principal
+        window.location.href = 'index.html';
+      }
+
+      // ============================================================
+      // 13. BAIXAR IMAGEM
+      // ============================================================
+      function baixarImagem() {
+        if (!state.currentLightboxFile) {
+          showAlert('Nenhuma imagem selecionada para baixar.');
+          return;
+        }
+
+        const fileUrl = state.currentLightboxFile.dataUrl || state.currentLightboxFile.gitUrl || state.currentLightboxFile.path;
+        const fileName = state.currentLightboxFile.name;
+
+        if (!fileUrl) {
+          showAlert('URL da imagem não encontrada.');
+          return;
+        }
+
+        try {
+          if (fileUrl.startsWith('data:')) {
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return;
           }
+
+          fetch(fileUrl)
+            .then(response => {
+              if (!response.ok) throw new Error('Erro ao baixar: ' + response.status);
+              return response.blob();
+            })
+            .then(blob => {
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = fileName;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            })
+            .catch(() => {
+              window.open(fileUrl, '_blank');
+            });
         } catch (error) {
-          showGitHubStatus(false, `❌ Erro de rede: ${error.message}`);
+          showAlert('Erro ao baixar a imagem.');
+          window.open(fileUrl, '_blank');
         }
       }
 
-      function showGitHubStatus(success, message) {
-        if (githubStatus) {
-          githubStatus.style.display = 'block';
-          githubStatus.className = 'github-status ' + (success ? 'success' : 'error');
-          githubStatus.textContent = message;
-          setTimeout(() => {
-            if (githubStatus) githubStatus.style.display = 'none';
-          }, 5000);
+      // ============================================================
+      // 14. COMPARTILHAR IMAGEM
+      // ============================================================
+      const shareApps = [
+        { id: 'whatsapp', name: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366' },
+        { id: 'telegram', name: 'Telegram', icon: 'fab fa-telegram', color: '#0088cc' },
+        { id: 'email', name: 'E-mail', icon: 'fas fa-envelope', color: '#ea4335' },
+        { id: 'facebook', name: 'Facebook', icon: 'fab fa-facebook', color: '#1877f2' },
+        { id: 'twitter', name: 'Twitter/X', icon: 'fab fa-twitter', color: '#1da1f2' },
+        { id: 'instagram', name: 'Instagram', icon: 'fab fa-instagram', color: '#e4405f' },
+        { id: 'linkedin', name: 'LinkedIn', icon: 'fab fa-linkedin', color: '#0a66c2' },
+        { id: 'pinterest', name: 'Pinterest', icon: 'fab fa-pinterest', color: '#bd081c' },
+        { id: 'copy', name: 'Copiar Link', icon: 'fas fa-copy', color: '#f1c40f' },
+        { id: 'more', name: 'Mais Apps', icon: 'fas fa-ellipsis-h', color: '#8888a0' }
+      ];
+
+      function abrirShareModal() {
+        if (!state.shareImageData) {
+          showAlert('Nenhuma imagem selecionada para compartilhar.');
+          return;
+        }
+        renderShareApps();
+        if (DOM.shareModal) {
+          DOM.shareModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
         }
       }
 
-      // ===== COPIAR E-MAIL =====
-      if (copyBtn) {
-        copyBtn.addEventListener('click', async () => {
-          const email = EMAIL_FIXO;
+      function fecharShareModal() {
+        if (DOM.shareModal) {
+          DOM.shareModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }
+
+      function renderShareApps() {
+        const fileUrl = state.shareImageData.dataUrl || state.shareImageData.gitUrl || state.shareImageData.path;
+        const encodedUrl = encodeURIComponent(fileUrl);
+        const encodedText = encodeURIComponent('📸 Veja esta imagem da Leles Acessórios!');
+
+        let html = '';
+        shareApps.forEach(app => {
+          let url = '';
+          let onClick = '';
+
+          switch (app.id) {
+            case 'whatsapp': url = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`; break;
+            case 'telegram': url = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`; break;
+            case 'email': url = `mailto:?subject=Compartilhando%20imagem&body=${encodedText}%0A${encodedUrl}`; break;
+            case 'facebook': url = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`; break;
+            case 'twitter': url = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`; break;
+            case 'instagram': onClick = `copyToClipboard('${fileUrl}')`; break;
+            case 'linkedin': url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`; break;
+            case 'pinterest': url = `https://pinterest.com/pin/create/button/?url=${encodedUrl}&media=${encodedUrl}&description=${encodedText}`; break;
+            case 'copy': onClick = `copyToClipboard('${fileUrl}')`; break;
+            case 'more': onClick = `shareNative()'`; break;
+            default: return;
+          }
+
+          const dataAttr = url ? `data-url="${url}"` : '';
+          const clickAttr = onClick ? `onclick="${onClick}"` : '';
+
+          html += `
+            <div class="share-item ${app.id}" ${dataAttr} ${clickAttr}>
+              <i class="${app.icon}" style="color:${app.color}"></i>
+              <span class="share-name">${app.name}</span>
+            </div>
+          `;
+        });
+
+        if (DOM.shareGrid) {
+          DOM.shareGrid.innerHTML = html;
+        }
+
+        DOM.shareGrid.querySelectorAll('.share-item:not([onclick])').forEach(item => {
+          item.addEventListener('click', function() {
+            const url = this.dataset.url;
+            if (url) {
+              window.open(url, '_blank');
+              fecharShareModal();
+            }
+          });
+        });
+      }
+
+      window.copyToClipboard = function(text) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            showAlert('Link copiado para a área de transferência!');
+            fecharShareModal();
+          }).catch(() => {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      };
+
+      function fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showAlert('Link copiado para a área de transferência!');
+          fecharShareModal();
+        } catch (e) {
+          prompt('Copie o link abaixo:', text);
+        }
+        document.body.removeChild(textarea);
+      }
+
+      window.shareNative = function() {
+        if (navigator.share) {
+          const fileUrl = state.shareImageData.dataUrl || state.shareImageData.gitUrl || state.shareImageData.path;
+          const fileName = state.shareImageData.name;
+
+          if (fileUrl.startsWith('data:')) {
+            fetch(fileUrl)
+              .then(response => response.blob())
+              .then(blob => {
+                const file = new File([blob], fileName, { type: blob.type });
+                navigator.share({
+                  title: 'Leles Acessórios - Compartilhar Imagem',
+                  text: 'Veja esta imagem da Leles Acessórios!',
+                  files: [file]
+                }).catch(() => copyToClipboard(fileUrl));
+              })
+              .catch(() => copyToClipboard(fileUrl));
+          } else {
+            navigator.share({
+              title: 'Leles Acessórios - Compartilhar Imagem',
+              text: 'Veja esta imagem da Leles Acessórios!',
+              url: fileUrl
+            }).catch(() => copyToClipboard(fileUrl));
+          }
+        } else {
+          copyToClipboard(state.shareImageData.dataUrl || state.shareImageData.gitUrl || state.shareImageData.path);
+        }
+        fecharShareModal();
+      };
+
+      // ============================================================
+      // 15. COPIAR E-MAIL
+      // ============================================================
+      if (DOM.copyBtn) {
+        DOM.copyBtn.addEventListener('click', async () => {
           try {
-            await navigator.clipboard.writeText(email);
-            copyBtn.classList.add('copied');
-            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            await navigator.clipboard.writeText(EMAIL_FIXO);
+            DOM.copyBtn.classList.add('copied');
+            DOM.copyBtn.innerHTML = '<i class="fas fa-check"></i>';
             setTimeout(() => {
-              copyBtn.classList.remove('copied');
-              copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+              DOM.copyBtn.classList.remove('copied');
+              DOM.copyBtn.innerHTML = '<i class="far fa-copy"></i>';
             }, 2000);
           } catch (err) {
             const textarea = document.createElement('textarea');
-            textarea.value = email;
+            textarea.value = EMAIL_FIXO;
             document.body.appendChild(textarea);
             textarea.select();
             try {
               document.execCommand('copy');
-              copyBtn.classList.add('copied');
-              copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+              DOM.copyBtn.classList.add('copied');
+              DOM.copyBtn.innerHTML = '<i class="fas fa-check"></i>';
               setTimeout(() => {
-                copyBtn.classList.remove('copied');
-                copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+                DOM.copyBtn.classList.remove('copied');
+                DOM.copyBtn.innerHTML = '<i class="far fa-copy"></i>';
               }, 2000);
             } catch (e) {
-              alert('Não foi possível copiar. Copie manualmente: ' + email);
+              showAlert('Não foi possível copiar. Copie manualmente: ' + EMAIL_FIXO);
             }
             document.body.removeChild(textarea);
           }
         });
       }
 
-      // ===== FUNÇÃO PARA FECHAR MODAL =====
-      function fecharModal() {
-        if (adminModal) {
-          adminModal.classList.remove('active');
+      // ============================================================
+      // 16. EVENTOS DE TECLADO
+      // ============================================================
+      function handleKeydown(e) {
+        const key = e.key;
+
+        // Backspace (Android) ou Escape
+        if (key === 'Backspace' || key === 'Escape') {
+          e.preventDefault();
+
+          // Fechar compartilhamento
+          if (DOM.shareModal && DOM.shareModal.classList.contains('active')) {
+            fecharShareModal();
+            return;
+          }
+
+          // Fechar lightbox
+          if (state.isLightboxOpen) {
+            voltarDoLightbox();
+            return;
+          }
+
+          // Fechar galeria
+          if (state.isGalleryOpen) {
+            voltarParaPaginaPrincipal();
+            return;
+          }
+        }
+
+        // Setas no lightbox
+        if (state.isLightboxOpen) {
+          if (key === 'ArrowLeft') {
+            e.preventDefault();
+            navegarLightbox(-1);
+          } else if (key === 'ArrowRight') {
+            e.preventDefault();
+            navegarLightbox(1);
+          }
         }
       }
 
-      // ===== EVENTOS =====
+      document.addEventListener('keydown', handleKeydown);
 
-      if (adminToggle) {
-        adminToggle.addEventListener('click', () => {
-          if (adminModal) {
-            adminModal.classList.add('active');
-          }
-          loadGitHub();
-          // Ativar a primeira aba
-          const primeiroTab = document.querySelector('.tab-btn.active');
-          if (primeiroTab) {
-            primeiroTab.click();
-          }
+      // ============================================================
+      // 17. EVENTOS DOS BOTÕES
+      // ============================================================
+
+      // 17.1 Abrir Galeria
+      if (DOM.openGalleryBtn) {
+        DOM.openGalleryBtn.addEventListener('click', function() {
+          loadGalleryData();
+          abrirGaleria();
         });
       }
 
-      // Botão Fechar do modal (já existente)
-      if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', fecharModal);
-      }
-
-      // Botão Fechar na aba Configurações
-      if (closeConfigBtn) {
-        closeConfigBtn.addEventListener('click', fecharModal);
-      }
-
-      if (adminModal) {
-        adminModal.addEventListener('click', (e) => {
-          if (e.target === adminModal) {
-            fecharModal();
-          }
-        });
-      }
-
-      if (tabBtns) {
-        tabBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const tabId = btn.dataset.tab;
-            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-            const target = document.getElementById(tabId);
-            if (target) target.classList.add('active');
-            if (tabId === 'tabGitHub') loadGitHub();
-          });
-        });
-      }
-
-      if (githubForm) {
-        githubForm.addEventListener('submit', (e) => {
+      // 17.2 BOTÃO VOLTAR DA GALERIA - O MAIS IMPORTANTE!
+      if (DOM.btnVoltarGaleria) {
+        log('Botão Voltar encontrado!');
+        DOM.btnVoltarGaleria.addEventListener('click', function(e) {
+          e.stopPropagation();
           e.preventDefault();
-          const token = githubToken ? githubToken.value.trim() : '';
-          const owner = githubOwner ? githubOwner.value.trim() : '';
-          const repo = githubRepo ? githubRepo.value.trim() : '';
-          if (!token || !owner || !repo) {
-            showGitHubStatus(false, 'Preencha todos os campos.');
-            return;
+          log('Botão Voltar clicado!');
+          voltarParaPaginaPrincipal();
+        });
+      } else {
+        log('ERRO: Botão Voltar NÃO encontrado!');
+      }
+
+      // 17.3 Fechar galeria clicando fora
+      if (DOM.galleryModal) {
+        DOM.galleryModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            voltarParaPaginaPrincipal();
           }
-          saveGitHub(token, owner, repo);
-          showGitHubStatus(true, '✅ Credenciais salvas com sucesso!');
         });
       }
 
-      if (testGitHubBtn) {
-        testGitHubBtn.addEventListener('click', testGitHubConnection);
+      // 17.4 Lightbox - Voltar
+      if (DOM.lightboxVoltar) {
+        DOM.lightboxVoltar.addEventListener('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          voltarDoLightbox();
+        });
       }
 
-      // ===== INICIALIZAÇÃO =====
-      loadGitHub();
+      // 17.5 Lightbox - Fechar clicando fora
+      if (DOM.lightbox) {
+        DOM.lightbox.addEventListener('click', function(e) {
+          if (e.target === this) {
+            voltarDoLightbox();
+          }
+        });
+      }
+
+      // 17.6 Lightbox - Navegação
+      if (DOM.lightboxPrev) {
+        DOM.lightboxPrev.addEventListener('click', function(e) {
+          e.stopPropagation();
+          navegarLightbox(-1);
+        });
+      }
+
+      if (DOM.lightboxNext) {
+        DOM.lightboxNext.addEventListener('click', function(e) {
+          e.stopPropagation();
+          navegarLightbox(1);
+        });
+      }
+
+      // 17.7 Lightbox - Baixar
+      if (DOM.btnDownload) {
+        DOM.btnDownload.addEventListener('click', function(e) {
+          e.stopPropagation();
+          baixarImagem();
+        });
+      }
+
+      // 17.8 Lightbox - Compartilhar
+      if (DOM.btnShare) {
+        DOM.btnShare.addEventListener('click', function(e) {
+          e.stopPropagation();
+          abrirShareModal();
+        });
+      }
+
+      // 17.9 Compartilhamento - Fechar
+      if (DOM.shareClose) {
+        DOM.shareClose.addEventListener('click', fecharShareModal);
+      }
+
+      if (DOM.shareModal) {
+        DOM.shareModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            fecharShareModal();
+          }
+        });
+      }
+
+      // ============================================================
+      // 18. INICIALIZAÇÃO
+      // ============================================================
+      loadMensagem();
+      loadGalleryData();
+      log('App inicializado!');
+
+      // EXPOR FUNÇÃO PARA DEBUG
+      window.voltarParaPrincipal = voltarParaPaginaPrincipal;
 
     })();
   </script>
