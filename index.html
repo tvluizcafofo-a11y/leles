@@ -338,7 +338,6 @@
       flex-wrap: wrap;
     }
 
-    /* BOTÃO VOLTAR DA GALERIA - VERSÃO OTIMIZADA */
     .btn-voltar-gallery {
       background: #2e7d32;
       color: #fff;
@@ -535,7 +534,6 @@
       border-radius: 8px;
     }
 
-    /* BOTÃO VOLTAR DO LIGHTBOX */
     .lightbox-voltar {
       position: fixed;
       top: 20px;
@@ -866,7 +864,6 @@
         <h2><i class="fas fa-images"></i> Galeria</h2>
         <div class="gallery-actions">
           <span class="contador-midias" id="contadorMidias">0 arquivos</span>
-          <!-- BOTÃO VOLTAR - COM ID ÚNICO E ONCLICK DIRETO -->
           <button class="btn-voltar-gallery" id="btnVoltarGaleria">
             <i class="fas fa-arrow-left"></i> Voltar
           </button>
@@ -918,27 +915,16 @@
       // 1. REFERÊNCIAS DOS ELEMENTOS
       // ============================================================
       const DOM = {
-        // Áreas secretas
         secretLeft: document.getElementById('secretLeft'),
         secretRight: document.getElementById('secretRight'),
         adminLink: document.getElementById('adminLink'),
-        
-        // Cabeçalho
         openGalleryBtn: document.getElementById('openGalleryBtn'),
-        
-        // Mensagem
         mensagemTexto: document.getElementById('mensagemTexto'),
-        
-        // Miniaturas
         miniaturasGrid: document.getElementById('miniaturasGrid'),
-        
-        // Galeria
         galleryModal: document.getElementById('galleryModal'),
         galleryGrid: document.getElementById('galleryGrid'),
         contadorMidias: document.getElementById('contadorMidias'),
         btnVoltarGaleria: document.getElementById('btnVoltarGaleria'),
-        
-        // Lightbox
         lightbox: document.getElementById('lightbox'),
         lightboxContent: document.getElementById('lightboxContent'),
         lightboxVoltar: document.getElementById('lightboxVoltar'),
@@ -947,13 +933,9 @@
         lightboxCounter: document.getElementById('lightboxCounter'),
         btnDownload: document.getElementById('btnDownload'),
         btnShare: document.getElementById('btnShare'),
-        
-        // Compartilhamento
         shareModal: document.getElementById('shareModal'),
         shareGrid: document.getElementById('shareGrid'),
         shareClose: document.getElementById('shareClose'),
-        
-        // Email
         copyBtn: document.getElementById('copyEmailBtn'),
         emailLink: document.getElementById('emailLink')
       };
@@ -963,6 +945,10 @@
       // ============================================================
       const STORAGE_GALLERY = 'leles_gallery_files_v13';
       const STORAGE_MENSAGEM = 'leles_mensagem_inicial';
+      const STORAGE_GITHUB_OWNER = 'leles_github_owner';
+      const STORAGE_GITHUB_REPO = 'leles_github_repo';
+      const STORAGE_GITHUB_BRANCH = 'leles_github_branch';
+      const STORAGE_GITHUB_PATH = 'leles_github_path';
       const EMAIL_FIXO = 'leles4x4@yahoo.com.br';
       const REQUIRED_CLICKS = 7;
       const TIME_LIMIT = 2000;
@@ -981,7 +967,11 @@
         isLightboxOpen: false,
         leftClicks: 0,
         rightClicks: 0,
-        clickTimer: null
+        clickTimer: null,
+        githubOwner: '',
+        githubRepo: '',
+        githubBranch: 'main',
+        githubPath: 'imagens'
       };
 
       // ============================================================
@@ -996,7 +986,92 @@
       }
 
       // ============================================================
-      // 5. SISTEMA DE CLIQUE SECRETO (7+7)
+      // 5. CARREGAR CONFIGURAÇÕES DO GITHUB
+      // ============================================================
+      function loadGitHubConfig() {
+        state.githubOwner = localStorage.getItem(STORAGE_GITHUB_OWNER) || '';
+        state.githubRepo = localStorage.getItem(STORAGE_GITHUB_REPO) || '';
+        state.githubBranch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || 'main';
+        state.githubPath = localStorage.getItem(STORAGE_GITHUB_PATH) || 'imagens';
+        log('Config GitHub carregada:', state.githubOwner, state.githubRepo);
+      }
+
+      // ============================================================
+      // 6. CARREGAR IMAGENS DO GITHUB
+      // ============================================================
+      async function carregarImagensDoGitHub() {
+        if (!state.githubOwner || !state.githubRepo) {
+          log('GitHub não configurado');
+          return;
+        }
+
+        try {
+          const url = `https://api.github.com/repos/${state.githubOwner}/${state.githubRepo}/contents/${state.githubPath}?ref=${state.githubBranch}`;
+          log('Buscando imagens do GitHub:', url);
+          
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            log('Erro ao buscar imagens do GitHub:', response.status);
+            return;
+          }
+
+          const files = await response.json();
+          
+          if (!Array.isArray(files)) {
+            log('Resposta não é um array');
+            return;
+          }
+
+          // Filtrar apenas arquivos de imagem e vídeo
+          const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.webm', '.ogg'];
+          const mediaFiles = files.filter(file => {
+            const ext = file.name.toLowerCase();
+            return validExtensions.some(v => ext.endsWith(v)) && file.type === 'file';
+          });
+
+          log('Arquivos de mídia encontrados:', mediaFiles.length);
+
+          if (mediaFiles.length === 0) {
+            return;
+          }
+
+          const baseUrl = `https://raw.githubusercontent.com/${state.githubOwner}/${state.githubRepo}/${state.githubBranch}/${state.githubPath}`;
+          let addedCount = 0;
+
+          // Limpar arquivos locais que não são do GitHub (opcional)
+          // Mantendo os arquivos locais também
+          const existingGitHubFiles = state.galleryFiles.filter(f => f.isGitHub);
+          
+          mediaFiles.forEach(file => {
+            // Verificar se o arquivo já existe na galeria
+            const exists = existingGitHubFiles.some(f => f.name === file.name);
+            if (!exists) {
+              const fileData = {
+                id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                name: file.name,
+                type: file.type || (file.name.match(/\.(mp4|webm|ogg)$/) ? 'video/mp4' : 'image/jpeg'),
+                path: file.path,
+                isGitHub: true,
+                gitUrl: `${baseUrl}/${file.name}`
+              };
+              state.galleryFiles.push(fileData);
+              addedCount++;
+            }
+          });
+
+          if (addedCount > 0) {
+            log(`${addedCount} novos arquivos carregados do GitHub`);
+            saveGalleryData();
+          }
+
+        } catch (error) {
+          log('Erro ao carregar imagens do GitHub:', error);
+        }
+      }
+
+      // ============================================================
+      // 7. SISTEMA DE CLIQUE SECRETO (7+7)
       // ============================================================
       function resetSecretClicks() {
         state.leftClicks = 0;
@@ -1058,24 +1133,37 @@
       }
 
       // ============================================================
-      // 6. MENSAGEM
+      // 8. MENSAGEM
       // ============================================================
       function loadMensagem() {
-        const saved = localStorage.getItem(STORAGE_MENSAGEM);
-        if (saved && saved.trim() !== '') {
-          DOM.mensagemTexto.textContent = saved;
-        } else {
-          DOM.mensagemTexto.textContent = 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
+        try {
+          const saved = localStorage.getItem(STORAGE_MENSAGEM);
+          let mensagem = 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
+          
+          if (saved && saved.trim() !== '') {
+            mensagem = saved.trim();
+          }
+          
+          if (DOM.mensagemTexto) {
+            DOM.mensagemTexto.textContent = mensagem;
+            log('Mensagem carregada:', mensagem);
+          }
+        } catch (e) {
+          log('Erro ao carregar mensagem:', e);
+          if (DOM.mensagemTexto) {
+            DOM.mensagemTexto.textContent = 'Bem-vindo à Leles Acessórios!';
+          }
         }
       }
 
       // ============================================================
-      // 7. GALERIA - CARREGAR E SALVAR
+      // 9. GALERIA - CARREGAR E SALVAR
       // ============================================================
       function loadGalleryData() {
         try {
           const saved = localStorage.getItem(STORAGE_GALLERY);
           state.galleryFiles = saved ? JSON.parse(saved) : [];
+          log('Galeria carregada:', state.galleryFiles.length, 'arquivos');
         } catch (e) {
           state.galleryFiles = [];
           log('Erro ao carregar galeria:', e);
@@ -1095,6 +1183,7 @@
             gitUrl: f.gitUrl || null
           }));
           localStorage.setItem(STORAGE_GALLERY, JSON.stringify(metadata));
+          log('Galeria salva:', state.galleryFiles.length, 'arquivos');
         } catch (e) {
           log('Erro ao salvar galeria:', e);
         }
@@ -1103,7 +1192,7 @@
       }
 
       // ============================================================
-      // 8. RENDERIZAR MINIATURAS (4 IMAGENS)
+      // 10. RENDERIZAR MINIATURAS (4 IMAGENS)
       // ============================================================
       function renderMiniaturas() {
         if (!DOM.miniaturasGrid) return;
@@ -1116,7 +1205,9 @@
             <div class="miniaturas-empty">
               <i class="fas fa-images"></i>
               <p>Nenhuma imagem disponível.</p>
-              <p style="font-size:0.8rem;color:#666;">Acesse o Admin para adicionar imagens.</p>
+              <p style="font-size:0.8rem;color:#666;">
+                ${state.githubOwner && state.githubRepo ? 'Carregando imagens do GitHub...' : 'Acesse o Admin para adicionar imagens.'}
+              </p>
             </div>
           `;
           return;
@@ -1156,7 +1247,7 @@
       }
 
       // ============================================================
-      // 9. RENDERIZAR GALERIA
+      // 11. RENDERIZAR GALERIA
       // ============================================================
       function renderGallery() {
         if (!DOM.galleryGrid) return;
@@ -1166,7 +1257,9 @@
             <div class="gallery-empty">
               <i class="fas fa-cloud-upload-alt"></i>
               <p>Nenhuma mídia na galeria.</p>
-              <p style="font-size:0.9rem;color:#666;">Acesse o Admin para adicionar imagens.</p>
+              <p style="font-size:0.9rem;color:#666;">
+                ${state.githubOwner && state.githubRepo ? 'Carregando imagens do GitHub...' : 'Acesse o Admin para adicionar imagens.'}
+              </p>
             </div>
           `;
           DOM.contadorMidias.textContent = '0 arquivos';
@@ -1206,7 +1299,7 @@
       }
 
       // ============================================================
-      // 10. GALERIA - ABRIR/FECHAR
+      // 12. GALERIA - ABRIR/FECHAR
       // ============================================================
       function abrirGaleria() {
         if (DOM.galleryModal) {
@@ -1227,7 +1320,7 @@
       }
 
       // ============================================================
-      // 11. LIGHTBOX - ABRIR/FECHAR/NAVEGAR
+      // 13. LIGHTBOX - ABRIR/FECHAR/NAVEGAR
       // ============================================================
       function abrirLightbox(index) {
         state.lightboxFiles = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
@@ -1298,36 +1391,29 @@
       }
 
       // ============================================================
-      // 12. VOLTAR PARA A PÁGINA PRINCIPAL (AÇÃO PRINCIPAL)
+      // 14. VOLTAR PARA A PÁGINA PRINCIPAL
       // ============================================================
       function voltarParaPaginaPrincipal() {
-        // ALERT DE TESTE
-        showAlert('apertou');
         log('Voltar para página principal');
+        showAlert('apertou');
 
-        // Fechar galeria
         fecharGaleria();
-
-        // Fechar lightbox
         fecharLightbox();
 
-        // Fechar compartilhamento
         if (DOM.shareModal && DOM.shareModal.classList.contains('active')) {
           DOM.shareModal.classList.remove('active');
         }
 
-        // Resetar estado
         state.currentLightboxFile = null;
         state.shareImageData = null;
         state.lightboxFiles = [];
         state.lightboxIndex = 0;
 
-        // Redirecionar para a página principal
         window.location.href = 'index.html';
       }
 
       // ============================================================
-      // 13. BAIXAR IMAGEM
+      // 15. BAIXAR IMAGEM
       // ============================================================
       function baixarImagem() {
         if (!state.currentLightboxFile) {
@@ -1379,7 +1465,7 @@
       }
 
       // ============================================================
-      // 14. COMPARTILHAR IMAGEM
+      // 16. COMPARTILHAR IMAGEM
       // ============================================================
       const shareApps = [
         { id: 'whatsapp', name: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366' },
@@ -1522,7 +1608,7 @@
       };
 
       // ============================================================
-      // 15. COPIAR E-MAIL
+      // 17. COPIAR E-MAIL
       // ============================================================
       if (DOM.copyBtn) {
         DOM.copyBtn.addEventListener('click', async () => {
@@ -1556,35 +1642,30 @@
       }
 
       // ============================================================
-      // 16. EVENTOS DE TECLADO
+      // 18. EVENTOS DE TECLADO
       // ============================================================
       function handleKeydown(e) {
         const key = e.key;
 
-        // Backspace (Android) ou Escape
         if (key === 'Backspace' || key === 'Escape') {
           e.preventDefault();
 
-          // Fechar compartilhamento
           if (DOM.shareModal && DOM.shareModal.classList.contains('active')) {
             fecharShareModal();
             return;
           }
 
-          // Fechar lightbox
           if (state.isLightboxOpen) {
             voltarDoLightbox();
             return;
           }
 
-          // Fechar galeria
           if (state.isGalleryOpen) {
             voltarParaPaginaPrincipal();
             return;
           }
         }
 
-        // Setas no lightbox
         if (state.isLightboxOpen) {
           if (key === 'ArrowLeft') {
             e.preventDefault();
@@ -1599,10 +1680,9 @@
       document.addEventListener('keydown', handleKeydown);
 
       // ============================================================
-      // 17. EVENTOS DOS BOTÕES
+      // 19. EVENTOS DOS BOTÕES
       // ============================================================
 
-      // 17.1 Abrir Galeria
       if (DOM.openGalleryBtn) {
         DOM.openGalleryBtn.addEventListener('click', function() {
           loadGalleryData();
@@ -1610,7 +1690,6 @@
         });
       }
 
-      // 17.2 BOTÃO VOLTAR DA GALERIA - O MAIS IMPORTANTE!
       if (DOM.btnVoltarGaleria) {
         log('Botão Voltar encontrado!');
         DOM.btnVoltarGaleria.addEventListener('click', function(e) {
@@ -1623,7 +1702,6 @@
         log('ERRO: Botão Voltar NÃO encontrado!');
       }
 
-      // 17.3 Fechar galeria clicando fora
       if (DOM.galleryModal) {
         DOM.galleryModal.addEventListener('click', function(e) {
           if (e.target === this) {
@@ -1632,7 +1710,6 @@
         });
       }
 
-      // 17.4 Lightbox - Voltar
       if (DOM.lightboxVoltar) {
         DOM.lightboxVoltar.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -1641,7 +1718,6 @@
         });
       }
 
-      // 17.5 Lightbox - Fechar clicando fora
       if (DOM.lightbox) {
         DOM.lightbox.addEventListener('click', function(e) {
           if (e.target === this) {
@@ -1650,7 +1726,6 @@
         });
       }
 
-      // 17.6 Lightbox - Navegação
       if (DOM.lightboxPrev) {
         DOM.lightboxPrev.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -1665,7 +1740,6 @@
         });
       }
 
-      // 17.7 Lightbox - Baixar
       if (DOM.btnDownload) {
         DOM.btnDownload.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -1673,7 +1747,6 @@
         });
       }
 
-      // 17.8 Lightbox - Compartilhar
       if (DOM.btnShare) {
         DOM.btnShare.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -1681,7 +1754,6 @@
         });
       }
 
-      // 17.9 Compartilhamento - Fechar
       if (DOM.shareClose) {
         DOM.shareClose.addEventListener('click', fecharShareModal);
       }
@@ -1695,10 +1767,18 @@
       }
 
       // ============================================================
-      // 18. INICIALIZAÇÃO
+      // 20. INICIALIZAÇÃO
       // ============================================================
+      loadGitHubConfig();
       loadMensagem();
       loadGalleryData();
+      
+      // Carregar imagens do GitHub automaticamente
+      setTimeout(async () => {
+        await carregarImagensDoGitHub();
+        log('Imagens do GitHub carregadas!');
+      }, 1000);
+
       log('App inicializado!');
 
       // EXPOR FUNÇÃO PARA DEBUG
