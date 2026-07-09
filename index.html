@@ -664,7 +664,7 @@
     }
 
     /* ============================================================
-       ADMIN MODAL (INTEGRADO)
+       ADMIN MODAL
     ============================================================ */
     .admin-modal {
       display: none;
@@ -1451,7 +1451,6 @@
         shareClose: document.getElementById('shareClose'),
         copyBtn: document.getElementById('copyEmailBtn'),
         emailLink: document.getElementById('emailLink'),
-        // Admin
         adminTabs: document.querySelectorAll('.admin-tab'),
         adminTabContents: document.querySelectorAll('.admin-tab-content'),
         adminPreviewMensagem: document.getElementById('adminPreviewMensagem'),
@@ -1499,7 +1498,7 @@
       const MINIATURAS_QTD = 4;
 
       // ============================================================
-      // 3. CONFIGURAÇÃO GITHUB - PADRÃO
+      // 3. CONFIGURAÇÃO GITHUB - FIXA
       // ============================================================
       const GITHUB_CONFIG = {
         owner: 'vluizcafofo-a11y',
@@ -1524,8 +1523,8 @@
         clickTimer: null,
         selectedFiles: [],
         isLoading: false,
-        githubConfig: { ...GITHUB_CONFIG },
-        isLoadingFromGitHub: false
+        isLoadingFromGitHub: false,
+        githubFilesLoaded: false
       };
 
       // ============================================================
@@ -1733,12 +1732,13 @@
         localStorage.setItem(STORAGE_GITHUB_REPO, repo);
         localStorage.setItem(STORAGE_GITHUB_BRANCH, branch);
         localStorage.setItem(STORAGE_GITHUB_PATH, path);
-        state.githubConfig = { owner, repo, branch, path };
         if (DOM.adminGitHubStatus) {
           DOM.adminGitHubStatus.textContent = '✅ Configurações salvas com sucesso!';
           DOM.adminGitHubStatus.style.color = '#4caf50';
           setTimeout(() => { DOM.adminGitHubStatus.textContent = ''; }, 3000);
         }
+        // Recarregar imagens após salvar configurações
+        setTimeout(() => carregarImagensDoGitHub(), 500);
       }
 
       if (DOM.adminGitHubForm) {
@@ -1768,46 +1768,13 @@
       }
 
       // ============================================================
-      // 12. GALERIA - CARREGAR E SALVAR
-      // ============================================================
-      function loadGalleryData() {
-        try {
-          const saved = localStorage.getItem(STORAGE_GALLERY);
-          state.galleryFiles = saved ? JSON.parse(saved) : [];
-          log('Galeria carregada:', state.galleryFiles.length, 'arquivos');
-        } catch (e) {
-          state.galleryFiles = [];
-        }
-        renderGallery();
-        renderMiniaturas();
-      }
-
-      function saveGalleryData() {
-        try {
-          const metadata = state.galleryFiles.map(f => ({
-            id: f.id,
-            name: f.name,
-            type: f.type,
-            path: f.path || f.name,
-            isGitHub: f.isGitHub || false,
-            gitUrl: f.gitUrl || null
-          }));
-          localStorage.setItem(STORAGE_GALLERY, JSON.stringify(metadata));
-        } catch (e) {
-          log('Erro ao salvar galeria:', e);
-        }
-        renderGallery();
-        renderMiniaturas();
-        carregarEditGrid();
-      }
-
-      // ============================================================
-      // 13. CARREGAR IMAGENS DO GITHUB - CORRIGIDO
+      // 12. GALERIA - CARREGAR DO GITHUB (PRIORIDADE)
       // ============================================================
       async function carregarImagensDoGitHub() {
         if (state.isLoadingFromGitHub) return;
         state.isLoadingFromGitHub = true;
 
+        // Usar configurações salvas ou as fixas
         const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || GITHUB_CONFIG.owner;
         const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || GITHUB_CONFIG.repo;
         const path = localStorage.getItem(STORAGE_GITHUB_PATH) || GITHUB_CONFIG.path;
@@ -1822,7 +1789,7 @@
         }
 
         try {
-          // Usar a API do GitHub para listar arquivos
+          // Buscar lista de arquivos da pasta no GitHub
           const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
           log('Buscando:', url);
           
@@ -1852,24 +1819,24 @@
           log('Arquivos de mídia encontrados:', mediaFiles.length);
 
           if (mediaFiles.length === 0) {
-            log('Nenhum arquivo de mídia encontrado');
+            log('Nenhum arquivo de mídia encontrado na pasta');
             state.isLoadingFromGitHub = false;
+            // Mostrar mensagem na galeria
+            renderGallery();
+            renderMiniaturas();
             return;
           }
 
           // URL base para as imagens (RAW)
           const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
           
-          // Limpar arquivos do GitHub antigos (manter apenas locais)
-          const localFiles = state.galleryFiles.filter(f => !f.isGitHub);
-          
-          // Criar nova lista com arquivos do GitHub
+          // Criar lista de arquivos do GitHub
           const githubFiles = [];
           let addedCount = 0;
 
           mediaFiles.forEach(file => {
             const fileData = {
-              id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+              id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5) + '_' + file.name.replace(/[^a-zA-Z0-9]/g, '_'),
               name: file.name,
               type: file.type || (file.name.match(/\.(mp4|webm|ogg)$/) ? 'video/mp4' : 'image/jpeg'),
               path: file.path,
@@ -1880,11 +1847,13 @@
             addedCount++;
           });
 
-          // Combinar arquivos locais + GitHub
-          state.galleryFiles = [...localFiles, ...githubFiles];
+          // SUBSTITUIR completamente a galeria pelas imagens do GitHub
+          // (não manter imagens locais para garantir consistência entre dispositivos)
+          state.galleryFiles = githubFiles;
 
           if (addedCount > 0) {
             log(`${addedCount} arquivos carregados do GitHub`);
+            state.githubFilesLoaded = true;
             saveGalleryData();
           } else {
             renderGallery();
@@ -1893,18 +1862,61 @@
 
         } catch (error) {
           log('Erro ao carregar imagens do GitHub:', error);
+          // Se falhar, tentar carregar do localStorage como fallback
+          carregarDoLocalStorage();
         }
 
         state.isLoadingFromGitHub = false;
       }
 
       // ============================================================
-      // 14. RENDERIZAR MINIATURAS
+      // 13. GALERIA - CARREGAR DO LOCALSTORAGE (FALLBACK)
+      // ============================================================
+      function carregarDoLocalStorage() {
+        try {
+          const saved = localStorage.getItem(STORAGE_GALLERY);
+          if (saved) {
+            const files = JSON.parse(saved);
+            if (files && files.length > 0) {
+              state.galleryFiles = files;
+              log('Carregado do localStorage como fallback:', files.length, 'arquivos');
+            }
+          }
+        } catch (e) {
+          log('Erro ao carregar do localStorage:', e);
+        }
+        renderGallery();
+        renderMiniaturas();
+      }
+
+      // ============================================================
+      // 14. GALERIA - SALVAR (APENAS PARA REFERÊNCIA)
+      // ============================================================
+      function saveGalleryData() {
+        try {
+          const metadata = state.galleryFiles.map(f => ({
+            id: f.id,
+            name: f.name,
+            type: f.type,
+            path: f.path || f.name,
+            isGitHub: f.isGitHub || false,
+            gitUrl: f.gitUrl || null
+          }));
+          localStorage.setItem(STORAGE_GALLERY, JSON.stringify(metadata));
+        } catch (e) {
+          log('Erro ao salvar galeria:', e);
+        }
+        renderGallery();
+        renderMiniaturas();
+        carregarEditGrid();
+      }
+
+      // ============================================================
+      // 15. RENDERIZAR MINIATURAS
       // ============================================================
       function renderMiniaturas() {
         if (!DOM.miniaturasGrid) return;
 
-        // Pegar apenas imagens (não vídeos)
         const imagens = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
         const miniaturas = imagens.slice(0, MINIATURAS_QTD);
 
@@ -1912,8 +1924,10 @@
           DOM.miniaturasGrid.innerHTML = `
             <div class="miniaturas-empty">
               <i class="fas fa-images"></i>
-              <p>Nenhuma imagem disponível.</p>
-              <p style="font-size:0.8rem;color:#666;">Carregando imagens do GitHub...</p>
+              <p>${state.isLoadingFromGitHub ? 'Carregando imagens do GitHub...' : 'Nenhuma imagem disponível.'}</p>
+              <p style="font-size:0.8rem;color:#666;margin-top:10px;">
+                <span style="color:#f1c40f;">💡</span> As imagens são carregadas do GitHub automaticamente.
+              </p>
             </div>
           `;
           return;
@@ -1921,6 +1935,7 @@
 
         let html = '';
         miniaturas.forEach((file, index) => {
+          // PRIORIZAR URL DO GITHUB
           const fileUrl = file.gitUrl || file.dataUrl || file.path;
           const isGitHub = file.isGitHub;
           html += `
@@ -1953,7 +1968,7 @@
       }
 
       // ============================================================
-      // 15. RENDERIZAR GALERIA
+      // 16. RENDERIZAR GALERIA
       // ============================================================
       function renderGallery() {
         if (!DOM.galleryGrid) return;
@@ -1962,8 +1977,10 @@
           DOM.galleryGrid.innerHTML = `
             <div class="gallery-empty">
               <i class="fas fa-cloud-upload-alt"></i>
-              <p>Nenhuma mídia na galeria.</p>
-              <p style="font-size:0.9rem;color:#666;">Carregando imagens do GitHub...</p>
+              <p>${state.isLoadingFromGitHub ? 'Carregando imagens do GitHub...' : 'Nenhuma mídia na galeria.'}</p>
+              <p style="font-size:0.9rem;color:#666;">
+                <span style="color:#f1c40f;">💡</span> As imagens são carregadas do repositório GitHub.
+              </p>
             </div>
           `;
           DOM.contadorMidias.textContent = '0 arquivos';
@@ -1973,7 +1990,7 @@
         let html = '';
         state.galleryFiles.forEach((file, index) => {
           const isVideo = file.type.startsWith('video/');
-          // PRIORIZAR URL DO GITHUB (gitUrl) para imagens do GitHub
+          // PRIORIZAR URL DO GITHUB
           const fileUrl = file.gitUrl || file.dataUrl || file.path;
           const sourceIcon = file.isGitHub ? '<i class="fab fa-github github-icon"></i>' : '';
 
@@ -2004,7 +2021,7 @@
       }
 
       // ============================================================
-      // 16. GALERIA - ABRIR/FECHAR
+      // 17. GALERIA - ABRIR/FECHAR
       // ============================================================
       function abrirGaleria() {
         if (DOM.galleryModal) {
@@ -2023,7 +2040,7 @@
       }
 
       // ============================================================
-      // 17. LIGHTBOX
+      // 18. LIGHTBOX
       // ============================================================
       function abrirLightbox(index) {
         state.lightboxFiles = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
@@ -2091,7 +2108,7 @@
       }
 
       // ============================================================
-      // 18. VOLTAR PARA A PÁGINA PRINCIPAL
+      // 19. VOLTAR PARA A PÁGINA PRINCIPAL
       // ============================================================
       window.voltarParaPrincipal = function() {
         log('Voltar para página principal');
@@ -2122,7 +2139,7 @@
       };
 
       // ============================================================
-      // 19. ADMIN - EDITAR GRID
+      // 20. ADMIN - EDITAR GRID
       // ============================================================
       function carregarEditGrid() {
         if (!DOM.adminEditGrid) return;
@@ -2132,7 +2149,7 @@
             <div class="admin-edit-empty">
               <i class="fas fa-images"></i>
               <p>Nenhuma imagem na galeria.</p>
-              <p style="font-size:0.8rem;color:#666;">Clique em "Incluir Imagem" para adicionar.</p>
+              <p style="font-size:0.8rem;color:#666;">As imagens são carregadas do GitHub automaticamente.</p>
             </div>
           `;
           return;
@@ -2143,11 +2160,11 @@
           const isVideo = file.type.startsWith('video/');
           const fileUrl = file.gitUrl || file.dataUrl || file.path;
           
-          let badge = 'Local';
-          let badgeClass = '';
-          if (file.isGitHub) {
-            badge = 'GitHub';
-            badgeClass = 'github';
+          let badge = 'GitHub';
+          let badgeClass = 'github';
+          if (!file.isGitHub) {
+            badge = 'Local';
+            badgeClass = '';
           }
           
           let actions = '';
@@ -2191,7 +2208,7 @@
       }
 
       // ============================================================
-      // 20. ADMIN - EXCLUIR DO GITHUB
+      // 21. ADMIN - EXCLUIR DO GITHUB
       // ============================================================
       window.deleteFromGitHub = async function(fileId) {
         const file = state.galleryFiles.find(f => f.id === fileId);
@@ -2216,7 +2233,7 @@
           return;
         }
 
-        if (!confirm(`Deseja excluir "${file.name}" do GitHub?\n\nRepositório: ${owner}/${repo}\nCaminho: ${path}/${file.name}`)) {
+        if (!confirm(`Deseja excluir "${file.name}" do GitHub?`)) {
           return;
         }
 
@@ -2229,14 +2246,7 @@
           });
 
           if (!checkResponse.ok) {
-            if (checkResponse.status === 404) {
-              throw new Error('Arquivo não encontrado no GitHub');
-            } else if (checkResponse.status === 401) {
-              throw new Error('Token inválido ou expirado');
-            } else {
-              const errorData = await checkResponse.json();
-              throw new Error(errorData.message || 'Erro ao verificar arquivo');
-            }
+            throw new Error('Arquivo não encontrado no GitHub');
           }
 
           const data = await checkResponse.json();
@@ -2259,12 +2269,7 @@
           if (deleteResponse.ok) {
             state.galleryFiles = state.galleryFiles.filter(f => f.id !== fileId);
             saveGalleryData();
-            const msg = `✅ "${file.name}" excluído do GitHub com sucesso!`;
-            if (DOM.adminEditStatus) {
-              DOM.adminEditStatus.textContent = msg;
-              DOM.adminEditStatus.style.color = '#4caf50';
-            }
-            alert(msg);
+            alert(`✅ "${file.name}" excluído do GitHub!`);
             carregarEditGrid();
             setTimeout(() => carregarImagensDoGitHub(), 500);
           } else {
@@ -2272,17 +2277,12 @@
             throw new Error(errorData.message || 'Erro ao excluir');
           }
         } catch (error) {
-          const msg = `❌ Erro ao excluir: ${error.message}`;
-          if (DOM.adminEditStatus) {
-            DOM.adminEditStatus.textContent = msg;
-            DOM.adminEditStatus.style.color = '#ef5350';
-          }
-          alert(msg);
+          alert(`❌ Erro ao excluir: ${error.message}`);
         }
       };
 
       // ============================================================
-      // 21. ADMIN - REMOVER ARQUIVO LOCAL
+      // 22. ADMIN - REMOVER ARQUIVO LOCAL
       // ============================================================
       window.removeFile = function(id) {
         const file = state.galleryFiles.find(f => f.id === id);
@@ -2302,7 +2302,7 @@
       };
 
       // ============================================================
-      // 22. ADMIN - ADICIONAR IMAGEM
+      // 23. ADMIN - ADICIONAR IMAGEM
       // ============================================================
       function adminAddFiles(files) {
         const validExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'video/mp4', 'video/webm', 'video/ogg'];
@@ -2318,7 +2318,7 @@
         });
 
         if (invalidFiles.length > 0) {
-          alert(`Formatos não suportados: ${invalidFiles.join(', ')}\nUse imagens (JPEG, PNG, GIF, WEBP) ou vídeos (MP4, WEBM, OGG).`);
+          alert(`Formatos não suportados: ${invalidFiles.join(', ')}`);
         }
 
         if (validFiles.length === 0) return;
@@ -2337,7 +2337,7 @@
             saveGalleryData();
             carregarEditGrid();
             if (DOM.adminEditStatus) {
-              DOM.adminEditStatus.textContent = `✅ "${file.name}" adicionado à galeria local.`;
+              DOM.adminEditStatus.textContent = `✅ "${file.name}" adicionado.`;
               DOM.adminEditStatus.style.color = '#4caf50';
               setTimeout(() => { DOM.adminEditStatus.textContent = ''; }, 3000);
             }
@@ -2362,7 +2362,7 @@
       }
 
       // ============================================================
-      // 23. ADMIN - UPLOAD PARA GITHUB
+      // 24. ADMIN - UPLOAD PARA GITHUB
       // ============================================================
       function updateAdminUploadList() {
         if (!DOM.adminUploadFileList) return;
@@ -2395,7 +2395,7 @@
               state.selectedFiles.push(file);
             }
           } else {
-            alert(`Formato não suportado: ${file.name}\nUse imagens (JPEG, PNG, GIF, WEBP) ou vídeos (MP4, WEBM, OGG).`);
+            alert(`Formato não suportado: ${file.name}`);
           }
         });
         
@@ -2463,13 +2463,13 @@
           const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
 
           if (!token) {
-            DOM.adminUploadStatus.textContent = '❌ Token necessário para enviar arquivos! Configure na aba GitHub.';
+            DOM.adminUploadStatus.textContent = '❌ Token necessário! Configure na aba GitHub.';
             DOM.adminUploadStatus.style.color = '#ef5350';
             return;
           }
 
           if (!owner || !repo) {
-            DOM.adminUploadStatus.textContent = '❌ Configure o dono e nome do repositório primeiro!';
+            DOM.adminUploadStatus.textContent = '❌ Configure o dono e nome do repositório!';
             DOM.adminUploadStatus.style.color = '#ef5350';
             return;
           }
@@ -2540,7 +2540,7 @@
               } else {
                 const errorData = await response.json();
                 failCount++;
-                DOM.adminUploadStatus.textContent = `❌ Erro ao enviar ${fileName}: ${errorData.message || 'Erro desconhecido'}`;
+                DOM.adminUploadStatus.textContent = `❌ Erro: ${errorData.message}`;
                 DOM.adminUploadStatus.style.color = '#ef5350';
               }
             } catch (error) {
@@ -2555,7 +2555,7 @@
           DOM.adminProgressBar.style.width = '100%';
           
           if (failCount === 0) {
-            DOM.adminUploadStatus.textContent = `✅ Todos os ${successCount} arquivos foram enviados com sucesso!`;
+            DOM.adminUploadStatus.textContent = `✅ ${successCount} arquivos enviados!`;
             DOM.adminUploadStatus.style.color = '#4caf50';
             setTimeout(() => {
               state.selectedFiles = [];
@@ -2563,12 +2563,12 @@
               carregarImagensDoGitHub();
             }, 1500);
           } else {
-            DOM.adminUploadStatus.textContent = `⚠️ ${successCount} enviados, ${failCount} falhas. Verifique os erros acima.`;
+            DOM.adminUploadStatus.textContent = `⚠️ ${successCount} enviados, ${failCount} falhas.`;
             DOM.adminUploadStatus.style.color = '#ffb74d';
           }
 
           DOM.adminUploadSelectedBtn.disabled = false;
-          DOM.adminUploadSelectedBtn.innerHTML = '<i class="fab fa-github"></i> Enviar Selecionados';
+          DOM.adminUploadSelectedBtn.innerHTML = '<i class="fab fa-github"></i> Enviar';
           
           setTimeout(() => {
             DOM.adminUploadProgress.classList.remove('active');
@@ -2591,11 +2591,10 @@
       }
 
       // ============================================================
-      // 24. ADMIN - TESTAR GITHUB CONEXÃO
+      // 25. ADMIN - TESTAR GITHUB CONEXÃO
       // ============================================================
       if (DOM.adminTestGitHubBtn) {
         DOM.adminTestGitHubBtn.addEventListener('click', async function() {
-          const token = DOM.adminGitHubToken.value.trim();
           const owner = DOM.adminGitHubOwner.value.trim();
           const repo = DOM.adminGitHubRepo.value.trim();
           const branch = DOM.adminGitHubBranch.value.trim() || 'main';
@@ -2611,42 +2610,16 @@
             const readUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
             const readResponse = await fetch(readUrl);
             
-            let readMessage = '';
-            let readSuccess = false;
-            
             if (readResponse.ok) {
-              readSuccess = true;
-              readMessage = '✅ Leitura OK (repositório público)';
+              DOM.adminGitHubStatus.textContent = '✅ Conexão OK! Pasta encontrada.';
+              DOM.adminGitHubStatus.style.color = '#4caf50';
             } else if (readResponse.status === 404) {
-              readMessage = '⚠️ Pasta não encontrada, mas repositório acessível';
-            } else if (readResponse.status === 403) {
-              readMessage = '⚠️ Repositório privado - necessário token para ler';
+              DOM.adminGitHubStatus.textContent = '⚠️ Pasta não encontrada, mas repositório acessível.';
+              DOM.adminGitHubStatus.style.color = '#ffb74d';
             } else {
-              readMessage = `⚠️ Erro na leitura: ${readResponse.status}`;
+              DOM.adminGitHubStatus.textContent = `⚠️ Erro: ${readResponse.status}`;
+              DOM.adminGitHubStatus.style.color = '#ffb74d';
             }
-
-            let writeMessage = '';
-            if (token) {
-              try {
-                const testUrl = `https://api.github.com/repos/${owner}/${repo}`;
-                const testResponse = await fetch(testUrl, {
-                  headers: { 'Authorization': `token ${token}` }
-                });
-                if (testResponse.ok) {
-                  writeMessage = ' ✅ Token válido para escrita/exclusão';
-                } else {
-                  writeMessage = ' ❌ Token inválido ou sem permissão';
-                }
-              } catch (e) {
-                writeMessage = ' ❌ Erro ao testar token';
-              }
-            } else {
-              writeMessage = ' ℹ️ Token não fornecido (apenas leitura)';
-            }
-
-            DOM.adminGitHubStatus.textContent = readMessage + writeMessage;
-            DOM.adminGitHubStatus.style.color = readSuccess ? '#4caf50' : '#ffb74d';
-            
           } catch (error) {
             DOM.adminGitHubStatus.textContent = `❌ Erro: ${error.message}`;
             DOM.adminGitHubStatus.style.color = '#ef5350';
@@ -2655,11 +2628,11 @@
       }
 
       // ============================================================
-      // 25. BAIXAR IMAGEM
+      // 26. BAIXAR IMAGEM
       // ============================================================
       function baixarImagem() {
         if (!state.currentLightboxFile) {
-          alert('Nenhuma imagem selecionada para baixar.');
+          alert('Nenhuma imagem selecionada.');
           return;
         }
 
@@ -2684,7 +2657,7 @@
 
           fetch(fileUrl)
             .then(response => {
-              if (!response.ok) throw new Error('Erro ao baixar: ' + response.status);
+              if (!response.ok) throw new Error('Erro ao baixar');
               return response.blob();
             })
             .then(blob => {
@@ -2714,7 +2687,7 @@
       }
 
       // ============================================================
-      // 26. COMPARTILHAR IMAGEM
+      // 27. COMPARTILHAR IMAGEM
       // ============================================================
       const shareApps = [
         { id: 'whatsapp', name: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366' },
@@ -2731,7 +2704,7 @@
 
       function abrirShareModal() {
         if (!state.shareImageData) {
-          alert('Nenhuma imagem selecionada para compartilhar.');
+          alert('Nenhuma imagem selecionada.');
           return;
         }
         renderShareApps();
@@ -2801,7 +2774,7 @@
       window.copyToClipboard = function(text) {
         if (navigator.clipboard) {
           navigator.clipboard.writeText(text).then(() => {
-            alert('Link copiado para a área de transferência!');
+            alert('Link copiado!');
             fecharShareModal();
           }).catch(() => {
             fallbackCopy(text);
@@ -2818,10 +2791,10 @@
         textarea.select();
         try {
           document.execCommand('copy');
-          alert('Link copiado para a área de transferência!');
+          alert('Link copiado!');
           fecharShareModal();
         } catch (e) {
-          prompt('Copie o link abaixo:', text);
+          prompt('Copie o link:', text);
         }
         document.body.removeChild(textarea);
       }
@@ -2837,16 +2810,16 @@
               .then(blob => {
                 const file = new File([blob], fileName, { type: blob.type });
                 navigator.share({
-                  title: 'Leles Acessórios - Compartilhar Imagem',
-                  text: 'Veja esta imagem da Leles Acessórios!',
+                  title: 'Leles Acessórios',
+                  text: 'Veja esta imagem!',
                   files: [file]
                 }).catch(() => copyToClipboard(fileUrl));
               })
               .catch(() => copyToClipboard(fileUrl));
           } else {
             navigator.share({
-              title: 'Leles Acessórios - Compartilhar Imagem',
-              text: 'Veja esta imagem da Leles Acessórios!',
+              title: 'Leles Acessórios',
+              text: 'Veja esta imagem!',
               url: fileUrl
             }).catch(() => copyToClipboard(fileUrl));
           }
@@ -2876,7 +2849,7 @@
       }
 
       // ============================================================
-      // 27. COPIAR E-MAIL
+      // 28. COPIAR E-MAIL
       // ============================================================
       if (DOM.copyBtn) {
         DOM.copyBtn.addEventListener('click', async () => {
@@ -2902,7 +2875,7 @@
                 DOM.copyBtn.innerHTML = '<i class="far fa-copy"></i>';
               }, 2000);
             } catch (e) {
-              alert('Não foi possível copiar. Copie manualmente: ' + EMAIL_FIXO);
+              alert('Copie manualmente: ' + EMAIL_FIXO);
             }
             document.body.removeChild(textarea);
           }
@@ -2910,18 +2883,19 @@
       }
 
       // ============================================================
-      // 28. EVENTOS DOS BOTÕES
+      // 29. EVENTOS DOS BOTÕES
       // ============================================================
 
-      // Abrir Galeria
       if (DOM.openGalleryBtn) {
         DOM.openGalleryBtn.addEventListener('click', function() {
-          loadGalleryData();
+          // Se ainda não carregou do GitHub, carregar
+          if (!state.githubFilesLoaded) {
+            carregarImagensDoGitHub();
+          }
           abrirGaleria();
         });
       }
 
-      // Fechar Galeria clicando fora
       if (DOM.galleryModal) {
         DOM.galleryModal.addEventListener('click', function(e) {
           if (e.target === this) {
@@ -2930,7 +2904,6 @@
         });
       }
 
-      // Lightbox - Voltar
       if (DOM.lightboxVoltar) {
         DOM.lightboxVoltar.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -2939,7 +2912,6 @@
         });
       }
 
-      // Lightbox - Fechar clicando fora
       if (DOM.lightbox) {
         DOM.lightbox.addEventListener('click', function(e) {
           if (e.target === this) {
@@ -2948,7 +2920,6 @@
         });
       }
 
-      // Lightbox - Navegação
       if (DOM.lightboxPrev) {
         DOM.lightboxPrev.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -2964,7 +2935,7 @@
       }
 
       // ============================================================
-      // 29. SALVAR MENSAGEM NO GITHUB
+      // 30. SALVAR MENSAGEM NO GITHUB
       // ============================================================
       if (DOM.adminSyncMensagemBtn) {
         DOM.adminSyncMensagemBtn.addEventListener('click', async function() {
@@ -2976,13 +2947,13 @@
 
           const texto = DOM.adminMensagemInput.value.trim();
           if (!texto) {
-            DOM.adminMensagemStatus.textContent = '⚠️ Digite uma mensagem antes de salvar.';
+            DOM.adminMensagemStatus.textContent = '⚠️ Digite uma mensagem.';
             DOM.adminMensagemStatus.style.color = '#ffb74d';
             return;
           }
 
           if (!token || !owner || !repo) {
-            DOM.adminMensagemStatus.textContent = '❌ Configure o token e repositório na aba GitHub!';
+            DOM.adminMensagemStatus.textContent = '❌ Configure token e repositório!';
             DOM.adminMensagemStatus.style.color = '#ef5350';
             return;
           }
@@ -3009,7 +2980,7 @@
 
             const uploadUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
             const payload = {
-              message: `Atualizar mensagem: ${texto.substring(0, 50)}...`,
+              message: `Atualizar mensagem`,
               content: base64Data,
               branch: branch
             };
@@ -3029,14 +3000,14 @@
             if (response.ok) {
               localStorage.setItem(STORAGE_MENSAGEM_GITHUB, texto);
               saveMensagemAdmin(texto);
-              DOM.adminMensagemStatus.textContent = '✅ Mensagem salva no GitHub com sucesso!';
+              DOM.adminMensagemStatus.textContent = '✅ Salva no GitHub!';
               DOM.adminMensagemStatus.style.color = '#4caf50';
             } else {
               const errorData = await response.json();
-              throw new Error(errorData.message || 'Erro ao salvar no GitHub');
+              throw new Error(errorData.message || 'Erro ao salvar');
             }
           } catch (error) {
-            DOM.adminMensagemStatus.textContent = `❌ Erro ao salvar no GitHub: ${error.message}`;
+            DOM.adminMensagemStatus.textContent = `❌ ${error.message}`;
             DOM.adminMensagemStatus.style.color = '#ef5350';
           }
 
@@ -3046,19 +3017,17 @@
       }
 
       // ============================================================
-      // 30. INICIALIZAÇÃO
+      // 31. INICIALIZAÇÃO
       // ============================================================
       loadMensagem();
-      loadGalleryData();
       
-      // Carregar imagens do GitHub automaticamente
+      // CARREGAR IMAGENS DO GITHUB PRIMEIRO
       setTimeout(async () => {
         await carregarImagensDoGitHub();
-        renderGallery();
-        renderMiniaturas();
-      }, 1000);
+      }, 500);
 
       log('App inicializado!');
+      log('GitHub Config:', GITHUB_CONFIG);
 
     })();
   </script>
