@@ -295,7 +295,7 @@
       z-index: 3000;
       align-items: center;
       justify-content: center;
-      padding: 0;
+      padding: 20px;
     }
 
     .gallery-modal.active {
@@ -303,33 +303,35 @@
     }
 
     .gallery-content {
-      background: transparent;
+      background: #1a1a24;
+      border-radius: 24px;
+      padding: 20px;
+      max-width: 1200px;
       width: 100%;
-      height: 100vh;
-      max-height: 100vh;
+      max-height: 90vh;
+      border: 1px solid #2a2a3a;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
     }
 
-    /* ===== CABEÇALHO DA GALERIA - REPOSICIONADO ===== */
     .gallery-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 25px;
-      background: rgba(0, 0, 0, 0.85);
+      padding: 15px 20px;
+      background: #1a1a24;
+      border-bottom: 1px solid #2a2a3a;
       flex-shrink: 0;
       z-index: 10;
-      min-height: 70px;
-      margin-top: 0;
+      position: sticky;
+      top: 0;
     }
 
     .gallery-header h2 {
       color: #f1c40f;
-      font-size: 1.5rem;
-      margin: 0;
+      font-size: 1.4rem;
     }
 
     .gallery-header h2 i {
@@ -343,17 +345,16 @@
       align-items: center;
     }
 
-    /* BOTÃO VOLTAR - REPOSICIONADO */
     .btn-voltar-gallery {
       background: #2e7d32;
       color: #fff;
       border: none;
       border-radius: 50px;
-      padding: 10px 24px;
+      padding: 8px 20px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-size: 1rem;
+      font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -368,7 +369,7 @@
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 15px 20px 20px 20px;
+      padding: 10px 20px 20px 20px;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
     }
@@ -378,7 +379,7 @@
     }
 
     .gallery-scroll-wrapper::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
+      background: #0a0a0f;
       border-radius: 10px;
     }
 
@@ -487,8 +488,9 @@
       color: #8888a0;
       font-size: 0.85rem;
       padding: 5px 15px;
-      background: rgba(255, 255, 255, 0.05);
+      background: #0a0a0f;
       border-radius: 20px;
+      border: 1px solid #2a2a3a;
     }
 
     /* ===== LIGHTBOX TELA CHEIA ===== */
@@ -661,15 +663,17 @@
       display: none;
     }
 
-    /* ===== MODAL DE COMPARTILHAMENTO ===== */
-    .share-modal {
+    /* ============================================================
+       ADMIN MODAL (INTEGRADO)
+    ============================================================ */
+    .admin-modal {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       z-index: 99999;
       align-items: center;
@@ -677,97 +681,482 @@
       padding: 20px;
     }
 
-    .share-modal.active {
+    .admin-modal.active {
       display: flex;
     }
 
-    .share-modal-content {
+    .admin-modal-content {
       background: #1a1a24;
       border-radius: 24px;
       padding: 30px;
-      max-width: 400px;
+      max-width: 750px;
       width: 100%;
-      max-height: 80vh;
+      max-height: 90vh;
       overflow-y: auto;
       border: 1px solid #2a2a3a;
       animation: fadeIn 0.3s ease;
     }
 
-    .share-modal-content h2 {
-      color: #f1c40f;
-      font-size: 1.4rem;
-      margin-bottom: 20px;
-      text-align: center;
+    .admin-modal-content::-webkit-scrollbar {
+      width: 6px;
     }
-
-    .share-modal-content h2 i {
-      margin-right: 10px;
-    }
-
-    .share-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .share-item {
+    .admin-modal-content::-webkit-scrollbar-track {
       background: #0a0a0f;
-      border: 1px solid #2a2a3a;
-      border-radius: 16px;
-      padding: 15px 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
+      border-radius: 10px;
+    }
+    .admin-modal-content::-webkit-scrollbar-thumb {
+      background: #f1c40f;
+      border-radius: 10px;
+    }
+
+    .admin-header {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      color: #b0a8a0;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #2a2a3a;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    .share-item:hover {
-      transform: translateY(-3px);
-      border-color: #f1c40f;
-      background: #1a1a24;
+    .admin-header h1 {
+      font-size: 1.8rem;
+      color: #e8e0d5;
     }
 
-    .share-item i {
-      font-size: 2rem;
+    .admin-header h1 span {
+      color: #f1c40f;
     }
 
-    .share-item .share-name {
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .share-item.whatsapp i { color: #25D366; }
-    .share-item.telegram i { color: #0088cc; }
-    .share-item.email i { color: #ea4335; }
-    .share-item.facebook i { color: #1877f2; }
-    .share-item.twitter i { color: #1da1f2; }
-    .share-item.instagram i { color: #e4405f; }
-    .share-item.linkedin i { color: #0a66c2; }
-    .share-item.pinterest i { color: #bd081c; }
-    .share-item.copy i { color: #f1c40f; }
-    .share-item.more i { color: #8888a0; }
-
-    .share-close {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
+    .admin-close {
       background: #c62828;
       color: #fff;
       border: none;
       border-radius: 50px;
+      padding: 8px 20px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-close:hover {
+      background: #b71c1c;
+      transform: scale(1.05);
+    }
+
+    /* ADMIN TABS */
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #2a2a3a;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .admin-tab {
+      background: none;
+      border: none;
+      padding: 8px 18px;
+      font-weight: 600;
+      color: #8888a0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
       font-size: 0.95rem;
     }
 
-    .share-close:hover {
+    .admin-tab.active {
+      background: #f1c40f;
+      color: #1a1a24;
+    }
+
+    .admin-tab:hover:not(.active) {
+      background: #2a2a3a;
+      color: #e8e0d5;
+    }
+
+    .admin-tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .admin-tab-content.active {
+      display: block;
+    }
+
+    /* ADMIN ESTILOS */
+    .admin-label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      color: #e8e0d5;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .admin-input, .admin-textarea, .admin-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #2a2a3a;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: 0.3s;
+      background: #0a0a0f;
+      color: #e8e0d5;
+      margin-bottom: 20px;
+      font-family: inherit;
+    }
+
+    .admin-input:focus, .admin-textarea:focus, .admin-select:focus {
+      border-color: #f1c40f;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(241, 196, 15, 0.15);
+    }
+
+    .admin-textarea {
+      resize: vertical;
+      min-height: 80px;
+      max-height: 200px;
+    }
+
+    .admin-input::placeholder, .admin-textarea::placeholder {
+      color: #666680;
+    }
+
+    .admin-btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .admin-btn {
+      padding: 10px 28px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-btn-primary {
+      background: #f1c40f;
+      color: #1a1a24;
+    }
+
+    .admin-btn-primary:hover {
+      background: #e0b50e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3);
+    }
+
+    .admin-btn-secondary {
+      background: #2a2a3a;
+      color: #b0a8a0;
+    }
+
+    .admin-btn-secondary:hover {
+      background: #3a3a4a;
+      color: #e8e0d5;
+    }
+
+    .admin-btn-success {
+      background: #4caf50;
+      color: #fff;
+    }
+
+    .admin-btn-success:hover {
+      background: #388e3c;
+      transform: translateY(-2px);
+    }
+
+    .admin-btn-danger {
+      background: #c62828;
+      color: #fff;
+    }
+
+    .admin-btn-danger:hover {
       background: #b71c1c;
+      transform: translateY(-2px);
+    }
+
+    .admin-status {
+      margin: 10px 0;
+      font-size: 0.9rem;
+      color: #888;
+      text-align: center;
+    }
+
+    .admin-alert {
+      background: #2a2a1a;
+      border-left: 4px solid #f1c40f;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      color: #c8b88a;
+      font-size: 0.9rem;
+    }
+
+    .admin-alert .highlight {
+      color: #f1c40f;
+      font-weight: 600;
+    }
+
+    .admin-contador {
+      background: #0a0a0f;
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin: 15px 0 20px;
+      text-align: center;
+      border: 1px solid #2a2a3a;
+    }
+
+    .admin-contador img {
+      max-width: 100%;
+      height: auto;
+      border: none;
+    }
+
+    .admin-drop-zone {
+      border: 2px dashed #3a3a4a;
+      border-radius: 12px;
+      padding: 30px 20px;
+      margin: 10px 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .admin-drop-zone:hover {
+      border-color: #f1c40f;
+      background: #1a1a24;
+    }
+
+    .admin-drop-zone.dragover {
+      border-color: #f1c40f;
+      background: #1a1a24;
       transform: scale(1.02);
+    }
+
+    .admin-drop-zone i {
+      font-size: 3rem;
+      color: #f1c40f;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .admin-drop-zone p {
+      font-size: 1rem;
+      color: #8888a0;
+    }
+
+    .admin-file-list {
+      max-height: 150px;
+      overflow-y: auto;
+      text-align: left;
+      margin: 10px 0;
+    }
+
+    .admin-file-item {
+      padding: 8px 12px;
+      border-bottom: 1px solid #1a1a24;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #b0a8a0;
+    }
+
+    .admin-file-item .file-size {
+      color: #666680;
+      font-size: 0.8rem;
+    }
+
+    .admin-upload-progress {
+      width: 100%;
+      height: 6px;
+      background: #1a1a24;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .admin-upload-progress .progress-bar {
+      height: 100%;
+      background: #f1c40f;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .admin-upload-progress.active {
+      display: block;
+    }
+
+    .admin-edit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 15px 0;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #0a0a0f;
+      border-radius: 12px;
+      border: 1px solid #2a2a3a;
+    }
+
+    .admin-edit-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+    .admin-edit-grid::-webkit-scrollbar-track {
+      background: #0a0a0f;
+      border-radius: 10px;
+    }
+    .admin-edit-grid::-webkit-scrollbar-thumb {
+      background: #f1c40f;
+      border-radius: 10px;
+    }
+
+    .admin-edit-item {
+      background: #1a1a24;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2a2a3a;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .admin-edit-item:hover {
+      transform: translateY(-3px);
+      border-color: #f1c40f;
+    }
+
+    .admin-edit-item .edit-thumb {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+      background: #0a0a0f;
+    }
+
+    .admin-edit-item .edit-thumb-video {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .admin-edit-item .edit-info {
+      padding: 6px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1a1a24;
+      border-top: 1px solid #2a2a3a;
+    }
+
+    .admin-edit-item .edit-name {
+      color: #b0a8a0;
+      font-size: 0.65rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70px;
+    }
+
+    .admin-edit-item .edit-badge {
+      font-size: 0.55rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      background: #2a2a3a;
+      color: #8888a0;
+    }
+
+    .admin-edit-item .edit-badge.github {
+      background: #1a2a3a;
+      color: #f1c40f;
+    }
+
+    .admin-edit-item .edit-actions {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: flex;
+      gap: 3px;
+    }
+
+    .admin-edit-item .edit-actions .btn-icon {
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+
+    .admin-edit-item .edit-actions .btn-icon:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .admin-edit-item .edit-actions .btn-delete {
+      background: rgba(198, 40, 40, 0.9);
+      color: #fff;
+    }
+
+    .admin-edit-item .edit-actions .btn-github-delete {
+      background: rgba(241, 196, 15, 0.8);
+      color: #1a1a24;
+    }
+
+    .admin-edit-empty {
+      text-align: center;
+      color: #666680;
+      padding: 30px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .admin-edit-empty i {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 10px;
+      color: #f1c40f;
+    }
+
+    .admin-mensagem-preview {
+      background: #0a0a0f;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border: 1px solid #2a2a3a;
+      color: #b0a8a0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .admin-mensagem-preview i {
+      color: #f1c40f;
+      margin-right: 8px;
+    }
+
+    .file-input-hidden {
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -784,18 +1173,20 @@
       .header-actions { justify-content: center; }
       .miniaturas-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
       .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-      .gallery-header { padding: 15px 20px; min-height: 60px; }
+      .gallery-content { padding: 15px; }
+      .gallery-header { padding: 10px 15px; }
       .gallery-header h2 { font-size: 1.2rem; }
-      .btn-voltar-gallery { padding: 8px 16px; font-size: 0.85rem; }
+      .btn-voltar-gallery { padding: 6px 14px; font-size: 0.8rem; }
+      .admin-modal-content { padding: 20px; }
+      .admin-header h1 { font-size: 1.4rem; }
+      .admin-tabs { gap: 4px; overflow-x: auto; flex-wrap: nowrap; }
+      .admin-tab { padding: 6px 12px; font-size: 0.8rem; flex-shrink: 0; }
       .lightbox-nav { width: 40px; height: 40px; font-size: 1rem; }
       .lightbox-nav.prev { left: 10px; }
       .lightbox-nav.next { right: 10px; }
       .lightbox-voltar { top: 15px; right: 15px; padding: 8px 16px; font-size: 0.85rem; }
       .lightbox-buttons { bottom: 20px; gap: 8px; }
       .btn-lightbox { padding: 8px 16px; font-size: 0.8rem; }
-      .share-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-      .share-item { padding: 12px 8px; }
-      .share-item i { font-size: 1.6rem; }
     }
 
     @media (max-width: 480px) {
@@ -804,22 +1195,22 @@
       .btn-gallery, .btn-admin { padding: 8px 16px; font-size: 0.85rem; }
       .miniaturas-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
       .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
-      .gallery-header { padding: 12px 15px; min-height: 55px; flex-wrap: wrap; gap: 8px; }
+      .gallery-content { padding: 10px; }
+      .gallery-header { padding: 8px 10px; flex-wrap: wrap; gap: 8px; }
       .gallery-header h2 { font-size: 1rem; }
-      .btn-voltar-gallery { padding: 6px 12px; font-size: 0.75rem; }
-      .gallery-actions { gap: 8px; }
+      .btn-voltar-gallery { padding: 4px 10px; font-size: 0.7rem; gap: 4px; }
+      .admin-modal-content { padding: 15px; }
+      .admin-header h1 { font-size: 1.2rem; }
+      .admin-tab { padding: 4px 10px; font-size: 0.7rem; }
+      .admin-edit-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; max-height: 250px; }
+      .admin-edit-item .edit-thumb { height: 80px; }
+      .admin-edit-item .edit-name { max-width: 50px; font-size: 0.6rem; }
       .lightbox-nav { width: 36px; height: 36px; font-size: 0.9rem; }
       .lightbox-nav.prev { left: 8px; }
       .lightbox-nav.next { right: 8px; }
       .lightbox-voltar { top: 12px; right: 12px; padding: 6px 12px; font-size: 0.75rem; gap: 4px; }
-      .gallery-content { padding: 0; }
-      .gallery-scroll-wrapper { padding: 8px 10px 10px 10px; }
       .lightbox-buttons { bottom: 15px; gap: 6px; }
       .btn-lightbox { padding: 6px 12px; font-size: 0.7rem; }
-      .share-modal-content { padding: 20px; }
-      .share-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .share-item i { font-size: 1.4rem; }
-      .share-item .share-name { font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -838,9 +1229,9 @@
         <button class="btn-gallery" id="openGalleryBtn">
           <i class="fas fa-images"></i> Ver Galeria
         </button>
-        <a href="admin.html" class="btn-admin" id="adminLink" style="display:none;">
+        <button class="btn-admin" id="adminToggleBtn" style="display:none;">
           <i class="fas fa-cog"></i> Admin
-        </a>
+        </button>
       </div>
     </div>
 
@@ -871,7 +1262,6 @@
   <!-- ===== GALERIA MODAL ===== -->
   <div class="gallery-modal" id="galleryModal">
     <div class="gallery-content">
-      <!-- CABEÇALHO REPOSICIONADO -->
       <div class="gallery-header">
         <h2><i class="fas fa-images"></i> Galeria</h2>
         <div class="gallery-actions">
@@ -919,6 +1309,149 @@
     </div>
   </div>
 
+  <!-- ============================================================
+       ADMIN MODAL (INTEGRADO)
+  ============================================================ -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-content">
+      <!-- Cabeçalho Admin -->
+      <div class="admin-header">
+        <h1>Painel <span>Admin</span></h1>
+        <button class="admin-close" id="adminCloseBtn">
+          <i class="fas fa-times"></i> Fechar
+        </button>
+      </div>
+
+      <!-- Tabs Admin -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="adminConfig">Configurações</button>
+        <button class="admin-tab" data-tab="adminMensagem">Mensagem</button>
+        <button class="admin-tab" data-tab="adminGitHub">GitHub</button>
+        <button class="admin-tab" data-tab="adminUpload">Upload</button>
+        <button class="admin-tab" data-tab="adminEdit">Editar</button>
+      </div>
+
+      <!-- ABA CONFIGURAÇÕES -->
+      <div id="adminConfig" class="admin-tab-content active">
+        <p style="margin-bottom: 10px; color: #b0a8a0;">Informações do site.</p>
+        <div class="admin-contador">
+          <a title="Contador de Visitas do MegaContador" href="https://megacontador.com.br/">
+            <img src="https://megacontador.com.br/img-VraSSjdhW2Ma3tKR-6.gif" border="0" alt="Contador de visitas">
+          </a>
+        </div>
+      </div>
+
+      <!-- ABA MENSAGEM -->
+      <div id="adminMensagem" class="admin-tab-content">
+        <div class="admin-alert">
+          <strong>✏️ Mensagem da Página Inicial:</strong> Edite a mensagem que aparece no topo da página principal.
+        </div>
+        <div class="admin-mensagem-preview">
+          <i class="fas fa-quote-left"></i>
+          <span id="adminPreviewMensagem">Carregando...</span>
+        </div>
+        <form id="adminMensagemForm">
+          <label class="admin-label" for="adminMensagemInput">Editar Mensagem</label>
+          <textarea class="admin-textarea" id="adminMensagemInput" placeholder="Digite a mensagem que aparecerá na página inicial..."></textarea>
+          <div class="admin-btn-group">
+            <button type="submit" class="admin-btn admin-btn-primary">
+              <i class="fas fa-save"></i> Salvar Mensagem
+            </button>
+            <button type="button" class="admin-btn admin-btn-secondary" id="adminResetMensagemBtn">
+              <i class="fas fa-undo"></i> Restaurar Padrão
+            </button>
+            <button type="button" class="admin-btn admin-btn-success" id="adminSyncMensagemBtn">
+              <i class="fab fa-github"></i> Salvar no GitHub
+            </button>
+          </div>
+          <div id="adminMensagemStatus" class="admin-status"></div>
+        </form>
+      </div>
+
+      <!-- ABA GITHUB -->
+      <div id="adminGitHub" class="admin-tab-content">
+        <div class="admin-alert">
+          <strong>⚠️ Atenção:</strong> Para <span class="highlight">CARREGAR</span> imagens do GitHub, o repositório deve ser <span class="highlight">PÚBLICO</span>.<br>
+          O token é necessário apenas para <span class="highlight">ENVIAR</span> e <span class="highlight">EXCLUIR</span> arquivos.
+        </div>
+        <p style="color:#b0a8a0;margin-bottom:15px;">Configure as credenciais do repositório.</p>
+        <form id="adminGitHubForm">
+          <label class="admin-label" for="adminGitHubToken">Token de Acesso Pessoal (PAT) - <span style="color:#f1c40f;">Opcional para leitura</span></label>
+          <input class="admin-input" type="password" id="adminGitHubToken" placeholder="github_pat_xxx... (só para upload/exclusão)">
+          <small style="color:#666;display:block;margin-top:-12px;margin-bottom:12px;">
+            <a href="https://github.com/settings/tokens" target="_blank" style="color:#f1c40f;">Criar token</a> (necessário para <strong>ENVIAR</strong> e <strong>EXCLUIR</strong> arquivos)
+          </small>
+
+          <label class="admin-label" for="adminGitHubOwner">Dono do repositório <span style="color:#f1c40f;">*</span></label>
+          <input class="admin-input" type="text" id="adminGitHubOwner" placeholder="seu-usuario" value="vluizcafofo-a11y">
+
+          <label class="admin-label" for="adminGitHubRepo">Nome do repositório <span style="color:#f1c40f;">*</span></label>
+          <input class="admin-input" type="text" id="adminGitHubRepo" placeholder="seu-repositorio" value="leles">
+
+          <label class="admin-label" for="adminGitHubBranch">Branch</label>
+          <input class="admin-input" type="text" id="adminGitHubBranch" placeholder="main" value="main">
+
+          <label class="admin-label" for="adminGitHubPath">Pasta de destino</label>
+          <input class="admin-input" type="text" id="adminGitHubPath" placeholder="imagens" value="imagens">
+
+          <div id="adminGitHubStatus" class="admin-status"></div>
+
+          <div class="admin-btn-group">
+            <button type="submit" class="admin-btn admin-btn-primary">Salvar configurações</button>
+            <button type="button" class="admin-btn admin-btn-secondary" id="adminTestGitHubBtn">Testar conexão</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ABA UPLOAD -->
+      <div id="adminUpload" class="admin-tab-content">
+        <div class="admin-alert">
+          <strong>📤 Upload para GitHub:</strong> Selecione as fotos e vídeos para enviar ao repositório.<br>
+          <span style="color:#f1c40f;">⚠️ Necessário token com permissão 'repo'</span>
+        </div>
+        <div class="admin-drop-zone" id="adminDropZone">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p><strong>Clique aqui</strong> ou arraste arquivos</p>
+          <p style="font-size:0.85rem;color:#666;margin-top:5px;">
+            Suporta: JPEG, PNG, GIF, WEBP, MP4, WEBM, OGG
+          </p>
+        </div>
+        <input type="file" id="adminUploadFileInput" class="file-input-hidden" multiple accept="image/*,video/*">
+        <div id="adminUploadFileList" class="admin-file-list">
+          <p style="color:#666;text-align:center;padding:10px;">Nenhum arquivo selecionado.</p>
+        </div>
+        <div class="admin-btn-group" style="justify-content:center;margin-top:15px;flex-wrap:wrap;">
+          <button class="admin-btn admin-btn-primary" id="adminUploadSelectedBtn">
+            <i class="fab fa-github"></i> Enviar Selecionados
+          </button>
+          <button class="admin-btn admin-btn-secondary" id="adminClearSelectedBtn">
+            <i class="fas fa-times"></i> Limpar Seleção
+          </button>
+        </div>
+        <div class="admin-upload-progress" id="adminUploadProgress">
+          <div class="progress-bar" id="adminProgressBar"></div>
+        </div>
+        <div id="adminUploadStatus" class="admin-status"></div>
+      </div>
+
+      <!-- ABA EDITAR -->
+      <div id="adminEdit" class="admin-tab-content">
+        <div class="admin-alert">
+          <strong>✏️ Editar Galeria:</strong> Inclua ou exclua imagens da galeria.<br>
+          <span style="color:#f1c40f;">⚠️ Para excluir do GitHub, é necessário token com permissão 'repo'</span>
+        </div>
+        <div class="admin-btn-group" style="justify-content:center;margin-bottom:15px;">
+          <button class="admin-btn admin-btn-primary" id="adminEditAddBtn">
+            <i class="fas fa-plus"></i> Incluir Imagem
+          </button>
+        </div>
+        <input type="file" id="adminEditFileInput" class="file-input-hidden" multiple accept="image/*,video/*">
+        <div class="admin-edit-grid" id="adminEditGrid"></div>
+        <div id="adminEditStatus" class="admin-status"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function() {
       'use strict';
@@ -929,7 +1462,9 @@
       const DOM = {
         secretLeft: document.getElementById('secretLeft'),
         secretRight: document.getElementById('secretRight'),
-        adminLink: document.getElementById('adminLink'),
+        adminToggleBtn: document.getElementById('adminToggleBtn'),
+        adminModal: document.getElementById('adminModal'),
+        adminCloseBtn: document.getElementById('adminCloseBtn'),
         openGalleryBtn: document.getElementById('openGalleryBtn'),
         mensagemTexto: document.getElementById('mensagemTexto'),
         miniaturasGrid: document.getElementById('miniaturasGrid'),
@@ -949,7 +1484,36 @@
         shareGrid: document.getElementById('shareGrid'),
         shareClose: document.getElementById('shareClose'),
         copyBtn: document.getElementById('copyEmailBtn'),
-        emailLink: document.getElementById('emailLink')
+        emailLink: document.getElementById('emailLink'),
+        // Admin
+        adminTabs: document.querySelectorAll('.admin-tab'),
+        adminTabContents: document.querySelectorAll('.admin-tab-content'),
+        adminPreviewMensagem: document.getElementById('adminPreviewMensagem'),
+        adminMensagemInput: document.getElementById('adminMensagemInput'),
+        adminMensagemForm: document.getElementById('adminMensagemForm'),
+        adminMensagemStatus: document.getElementById('adminMensagemStatus'),
+        adminResetMensagemBtn: document.getElementById('adminResetMensagemBtn'),
+        adminSyncMensagemBtn: document.getElementById('adminSyncMensagemBtn'),
+        adminGitHubForm: document.getElementById('adminGitHubForm'),
+        adminGitHubToken: document.getElementById('adminGitHubToken'),
+        adminGitHubOwner: document.getElementById('adminGitHubOwner'),
+        adminGitHubRepo: document.getElementById('adminGitHubRepo'),
+        adminGitHubBranch: document.getElementById('adminGitHubBranch'),
+        adminGitHubPath: document.getElementById('adminGitHubPath'),
+        adminGitHubStatus: document.getElementById('adminGitHubStatus'),
+        adminTestGitHubBtn: document.getElementById('adminTestGitHubBtn'),
+        adminDropZone: document.getElementById('adminDropZone'),
+        adminUploadFileInput: document.getElementById('adminUploadFileInput'),
+        adminUploadFileList: document.getElementById('adminUploadFileList'),
+        adminUploadSelectedBtn: document.getElementById('adminUploadSelectedBtn'),
+        adminClearSelectedBtn: document.getElementById('adminClearSelectedBtn'),
+        adminUploadProgress: document.getElementById('adminUploadProgress'),
+        adminProgressBar: document.getElementById('adminProgressBar'),
+        adminUploadStatus: document.getElementById('adminUploadStatus'),
+        adminEditAddBtn: document.getElementById('adminEditAddBtn'),
+        adminEditFileInput: document.getElementById('adminEditFileInput'),
+        adminEditGrid: document.getElementById('adminEditGrid'),
+        adminEditStatus: document.getElementById('adminEditStatus')
       };
 
       // ============================================================
@@ -957,13 +1521,19 @@
       // ============================================================
       const STORAGE_GALLERY = 'leles_gallery_files_v13';
       const STORAGE_MENSAGEM = 'leles_mensagem_inicial';
+      const STORAGE_GITHUB_TOKEN = 'leles_github_token';
+      const STORAGE_GITHUB_OWNER = 'leles_github_owner';
+      const STORAGE_GITHUB_REPO = 'leles_github_repo';
+      const STORAGE_GITHUB_BRANCH = 'leles_github_branch';
+      const STORAGE_GITHUB_PATH = 'leles_github_path';
+      const STORAGE_MENSAGEM_GITHUB = 'leles_mensagem_github';
       const EMAIL_FIXO = 'leles4x4@yahoo.com.br';
       const REQUIRED_CLICKS = 7;
       const TIME_LIMIT = 2000;
       const MINIATURAS_QTD = 4;
 
       // ============================================================
-      // 3. CONFIGURAÇÃO GITHUB - FIXA
+      // 3. CONFIGURAÇÃO GITHUB - PADRÃO
       // ============================================================
       const GITHUB_CONFIG = {
         owner: 'vluizcafofo-a11y',
@@ -985,7 +1555,10 @@
         isLightboxOpen: false,
         leftClicks: 0,
         rightClicks: 0,
-        clickTimer: null
+        clickTimer: null,
+        selectedFiles: [],
+        isLoading: false,
+        githubConfig: { ...GITHUB_CONFIG }
       };
 
       // ============================================================
@@ -993,6 +1566,10 @@
       // ============================================================
       function log(msg) {
         console.log('[Leles App]', msg);
+      }
+
+      function showAlert(msg) {
+        alert(msg);
       }
 
       // ============================================================
@@ -1011,11 +1588,11 @@
         if (state.leftClicks >= REQUIRED_CLICKS && state.rightClicks >= REQUIRED_CLICKS) {
           clearTimeout(state.clickTimer);
           state.clickTimer = null;
-          if (DOM.adminLink) {
-            DOM.adminLink.style.display = 'inline-flex';
-            DOM.adminLink.style.transform = 'scale(1.3)';
+          if (DOM.adminToggleBtn) {
+            DOM.adminToggleBtn.style.display = 'inline-flex';
+            DOM.adminToggleBtn.style.transform = 'scale(1.3)';
             setTimeout(() => {
-              if (DOM.adminLink) DOM.adminLink.style.transform = '';
+              if (DOM.adminToggleBtn) DOM.adminToggleBtn.style.transform = '';
             }, 300);
           }
           if (DOM.secretLeft) DOM.secretLeft.style.display = 'none';
@@ -1026,7 +1603,7 @@
       }
 
       function handleSecretClick(side) {
-        if (DOM.adminLink && DOM.adminLink.style.display === 'inline-flex') return;
+        if (DOM.adminToggleBtn && DOM.adminToggleBtn.style.display === 'inline-flex') return;
 
         if (state.leftClicks === 0 && state.rightClicks === 0) {
           state.clickTimer = setTimeout(resetSecretClicks, TIME_LIMIT);
@@ -1058,17 +1635,67 @@
       }
 
       // ============================================================
-      // 7. MENSAGEM
+      // 7. ADMIN - ABRIR/FECHAR
+      // ============================================================
+      function abrirAdmin() {
+        if (DOM.adminModal) {
+          DOM.adminModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          carregarDadosAdmin();
+        }
+      }
+
+      function fecharAdmin() {
+        if (DOM.adminModal) {
+          DOM.adminModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      }
+
+      if (DOM.adminToggleBtn) {
+        DOM.adminToggleBtn.addEventListener('click', abrirAdmin);
+      }
+
+      if (DOM.adminCloseBtn) {
+        DOM.adminCloseBtn.addEventListener('click', fecharAdmin);
+      }
+
+      if (DOM.adminModal) {
+        DOM.adminModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            fecharAdmin();
+          }
+        });
+      }
+
+      // ============================================================
+      // 8. ADMIN - TABS
+      // ============================================================
+      if (DOM.adminTabs) {
+        DOM.adminTabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            DOM.adminTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            const tabId = this.dataset.tab;
+            DOM.adminTabContents.forEach(content => content.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            if (tabId === 'adminEdit') carregarEditGrid();
+            if (tabId === 'adminMensagem') carregarMensagemAdmin();
+          });
+        });
+      }
+
+      // ============================================================
+      // 9. MENSAGEM
       // ============================================================
       function loadMensagem() {
         try {
           const saved = localStorage.getItem(STORAGE_MENSAGEM);
           let mensagem = 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
-          
           if (saved && saved.trim() !== '') {
             mensagem = saved.trim();
           }
-          
           if (DOM.mensagemTexto) {
             DOM.mensagemTexto.textContent = mensagem;
           }
@@ -1079,81 +1706,101 @@
         }
       }
 
-      // ============================================================
-      // 8. CARREGAR IMAGENS DO GITHUB
-      // ============================================================
-      async function carregarImagensDoGitHub() {
-        try {
-          const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
-          log('Buscando imagens do GitHub...');
-          
-          const response = await fetch(url);
-          
-          if (!response.ok) {
-            log('Erro ao buscar imagens do GitHub:', response.status);
-            return;
-          }
+      function carregarMensagemAdmin() {
+        const saved = localStorage.getItem(STORAGE_MENSAGEM);
+        const github = localStorage.getItem(STORAGE_MENSAGEM_GITHUB);
+        const texto = github || saved || 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
+        if (DOM.adminMensagemInput) DOM.adminMensagemInput.value = texto;
+        if (DOM.adminPreviewMensagem) DOM.adminPreviewMensagem.textContent = texto;
+      }
 
-          const files = await response.json();
-          
-          if (!Array.isArray(files)) {
-            log('Resposta não é um array');
-            return;
-          }
-
-          const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.webm', '.ogg'];
-          const mediaFiles = files.filter(file => {
-            const ext = file.name.toLowerCase();
-            return validExtensions.some(v => ext.endsWith(v)) && file.type === 'file';
-          });
-
-          log('Arquivos de mídia encontrados:', mediaFiles.length);
-
-          if (mediaFiles.length === 0) {
-            return;
-          }
-
-          const baseUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.path}`;
-          let addedCount = 0;
-
-          const existingFiles = state.galleryFiles.filter(f => !f.isGitHub);
-          state.galleryFiles = state.galleryFiles.filter(f => !f.isGitHub);
-          
-          mediaFiles.forEach(file => {
-            const exists = state.galleryFiles.some(f => f.name === file.name && f.isGitHub);
-            if (!exists) {
-              const fileData = {
-                id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-                name: file.name,
-                type: file.type || (file.name.match(/\.(mp4|webm|ogg)$/) ? 'video/mp4' : 'image/jpeg'),
-                path: file.path,
-                isGitHub: true,
-                gitUrl: `${baseUrl}/${file.name}`
-              };
-              state.galleryFiles.push(fileData);
-              addedCount++;
-            }
-          });
-
-          existingFiles.forEach(f => {
-            state.galleryFiles.push(f);
-          });
-
-          if (addedCount > 0) {
-            log(`${addedCount} novos arquivos carregados do GitHub`);
-            saveGalleryData();
-          } else {
-            renderGallery();
-            renderMiniaturas();
-          }
-
-        } catch (error) {
-          log('Erro ao carregar imagens do GitHub:', error);
+      function saveMensagemAdmin(texto) {
+        localStorage.setItem(STORAGE_MENSAGEM, texto);
+        if (DOM.mensagemTexto) DOM.mensagemTexto.textContent = texto;
+        if (DOM.adminPreviewMensagem) DOM.adminPreviewMensagem.textContent = texto;
+        if (DOM.adminMensagemStatus) {
+          DOM.adminMensagemStatus.textContent = '✅ Mensagem salva com sucesso!';
+          DOM.adminMensagemStatus.style.color = '#4caf50';
+          setTimeout(() => { DOM.adminMensagemStatus.textContent = ''; }, 3000);
         }
       }
 
+      if (DOM.adminMensagemForm) {
+        DOM.adminMensagemForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const texto = DOM.adminMensagemInput.value.trim();
+          if (!texto) {
+            DOM.adminMensagemStatus.textContent = '⚠️ Digite uma mensagem antes de salvar.';
+            DOM.adminMensagemStatus.style.color = '#ffb74d';
+            return;
+          }
+          saveMensagemAdmin(texto);
+          localStorage.removeItem(STORAGE_MENSAGEM_GITHUB);
+        });
+      }
+
+      if (DOM.adminResetMensagemBtn) {
+        DOM.adminResetMensagemBtn.addEventListener('click', function() {
+          const padrao = 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
+          DOM.adminMensagemInput.value = padrao;
+          saveMensagemAdmin(padrao);
+          localStorage.removeItem(STORAGE_MENSAGEM_GITHUB);
+        });
+      }
+
       // ============================================================
-      // 9. GALERIA - CARREGAR E SALVAR
+      // 10. GITHUB - ADMIN
+      // ============================================================
+      function carregarGitHubAdmin() {
+        DOM.adminGitHubToken.value = localStorage.getItem(STORAGE_GITHUB_TOKEN) || '';
+        DOM.adminGitHubOwner.value = localStorage.getItem(STORAGE_GITHUB_OWNER) || GITHUB_CONFIG.owner;
+        DOM.adminGitHubRepo.value = localStorage.getItem(STORAGE_GITHUB_REPO) || GITHUB_CONFIG.repo;
+        DOM.adminGitHubBranch.value = localStorage.getItem(STORAGE_GITHUB_BRANCH) || GITHUB_CONFIG.branch;
+        DOM.adminGitHubPath.value = localStorage.getItem(STORAGE_GITHUB_PATH) || GITHUB_CONFIG.path;
+      }
+
+      function salvarGitHubAdmin(token, owner, repo, branch, path) {
+        localStorage.setItem(STORAGE_GITHUB_TOKEN, token);
+        localStorage.setItem(STORAGE_GITHUB_OWNER, owner);
+        localStorage.setItem(STORAGE_GITHUB_REPO, repo);
+        localStorage.setItem(STORAGE_GITHUB_BRANCH, branch);
+        localStorage.setItem(STORAGE_GITHUB_PATH, path);
+        state.githubConfig = { owner, repo, branch, path };
+        if (DOM.adminGitHubStatus) {
+          DOM.adminGitHubStatus.textContent = '✅ Configurações salvas com sucesso!';
+          DOM.adminGitHubStatus.style.color = '#4caf50';
+          setTimeout(() => { DOM.adminGitHubStatus.textContent = ''; }, 3000);
+        }
+      }
+
+      if (DOM.adminGitHubForm) {
+        DOM.adminGitHubForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const token = DOM.adminGitHubToken.value.trim();
+          const owner = DOM.adminGitHubOwner.value.trim();
+          const repo = DOM.adminGitHubRepo.value.trim();
+          const branch = DOM.adminGitHubBranch.value.trim() || 'main';
+          const path = DOM.adminGitHubPath.value.trim() || 'imagens';
+          if (!owner || !repo) {
+            DOM.adminGitHubStatus.textContent = '⚠️ Preencha o dono e nome do repositório.';
+            DOM.adminGitHubStatus.style.color = '#ffb74d';
+            return;
+          }
+          salvarGitHubAdmin(token, owner, repo, branch, path);
+        });
+      }
+
+      // ============================================================
+      // 11. CARREGAR DADOS ADMIN
+      // ============================================================
+      function carregarDadosAdmin() {
+        carregarMensagemAdmin();
+        carregarGitHubAdmin();
+        carregarEditGrid();
+      }
+
+      // ============================================================
+      // 12. GALERIA - CARREGAR E SALVAR
       // ============================================================
       function loadGalleryData() {
         try {
@@ -1183,10 +1830,92 @@
         }
         renderGallery();
         renderMiniaturas();
+        carregarEditGrid();
       }
 
       // ============================================================
-      // 10. RENDERIZAR MINIATURAS
+      // 13. CARREGAR IMAGENS DO GITHUB
+      // ============================================================
+      async function carregarImagensDoGitHub() {
+        const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || GITHUB_CONFIG.owner;
+        const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || GITHUB_CONFIG.repo;
+        const path = localStorage.getItem(STORAGE_GITHUB_PATH) || GITHUB_CONFIG.path;
+        const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || GITHUB_CONFIG.branch;
+
+        if (!owner || !repo) {
+          log('GitHub não configurado');
+          return;
+        }
+
+        try {
+          const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+          log('Buscando imagens do GitHub...');
+          
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            log('Erro ao buscar imagens do GitHub:', response.status);
+            return;
+          }
+
+          const files = await response.json();
+          
+          if (!Array.isArray(files)) {
+            log('Resposta não é um array');
+            return;
+          }
+
+          const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.webm', '.ogg'];
+          const mediaFiles = files.filter(file => {
+            const ext = file.name.toLowerCase();
+            return validExtensions.some(v => ext.endsWith(v)) && file.type === 'file';
+          });
+
+          log('Arquivos de mídia encontrados:', mediaFiles.length);
+
+          if (mediaFiles.length === 0) {
+            return;
+          }
+
+          const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+          let addedCount = 0;
+
+          const existingFiles = state.galleryFiles.filter(f => !f.isGitHub);
+          state.galleryFiles = state.galleryFiles.filter(f => !f.isGitHub);
+          
+          mediaFiles.forEach(file => {
+            const exists = state.galleryFiles.some(f => f.name === file.name && f.isGitHub);
+            if (!exists) {
+              const fileData = {
+                id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                name: file.name,
+                type: file.type || (file.name.match(/\.(mp4|webm|ogg)$/) ? 'video/mp4' : 'image/jpeg'),
+                path: file.path,
+                isGitHub: true,
+                gitUrl: `${baseUrl}/${file.name}`
+              };
+              state.galleryFiles.push(fileData);
+              addedCount++;
+            }
+          });
+
+          existingFiles.forEach(f => { state.galleryFiles.push(f); });
+
+          if (addedCount > 0) {
+            log(`${addedCount} novos arquivos carregados do GitHub`);
+            saveGalleryData();
+          } else {
+            renderGallery();
+            renderMiniaturas();
+          }
+
+        } catch (error) {
+          log('Erro ao carregar imagens do GitHub:', error);
+        }
+      }
+
+      // ============================================================
+      // 14. RENDERIZAR MINIATURAS
       // ============================================================
       function renderMiniaturas() {
         if (!DOM.miniaturasGrid) return;
@@ -1239,7 +1968,7 @@
       }
 
       // ============================================================
-      // 11. RENDERIZAR GALERIA
+      // 15. RENDERIZAR GALERIA
       // ============================================================
       function renderGallery() {
         if (!DOM.galleryGrid) return;
@@ -1289,7 +2018,7 @@
       }
 
       // ============================================================
-      // 12. GALERIA - ABRIR/FECHAR
+      // 16. GALERIA - ABRIR/FECHAR
       // ============================================================
       function abrirGaleria() {
         if (DOM.galleryModal) {
@@ -1308,7 +2037,7 @@
       }
 
       // ============================================================
-      // 13. LIGHTBOX
+      // 17. LIGHTBOX
       // ============================================================
       function abrirLightbox(index) {
         state.lightboxFiles = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
@@ -1375,7 +2104,7 @@
       }
 
       // ============================================================
-      // 14. VOLTAR PARA A PÁGINA PRINCIPAL - FUNÇÃO GLOBAL
+      // 18. VOLTAR PARA A PÁGINA PRINCIPAL
       // ============================================================
       window.voltarParaPrincipal = function() {
         log('Voltar para página principal');
@@ -1401,14 +2130,545 @@
         state.shareImageData = null;
         state.lightboxFiles = [];
         state.lightboxIndex = 0;
-        
         document.body.style.overflow = '';
-        
         window.location.href = 'index.html';
       };
 
       // ============================================================
-      // 15. BAIXAR IMAGEM
+      // 19. ADMIN - EDITAR GRID
+      // ============================================================
+      function carregarEditGrid() {
+        if (!DOM.adminEditGrid) return;
+
+        if (state.galleryFiles.length === 0) {
+          DOM.adminEditGrid.innerHTML = `
+            <div class="admin-edit-empty">
+              <i class="fas fa-images"></i>
+              <p>Nenhuma imagem na galeria.</p>
+              <p style="font-size:0.8rem;color:#666;">Clique em "Incluir Imagem" para adicionar.</p>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        state.galleryFiles.forEach(file => {
+          const isVideo = file.type.startsWith('video/');
+          const fileUrl = file.dataUrl || file.gitUrl || file.path;
+          
+          let badge = 'Local';
+          let badgeClass = '';
+          if (file.isGitHub) {
+            badge = 'GitHub';
+            badgeClass = 'github';
+          }
+          
+          let actions = '';
+          if (file.isGitHub) {
+            actions = `
+              <button class="btn-icon btn-github-delete" onclick="window.deleteFromGitHub('${file.id}')" title="Excluir do GitHub">
+                <i class="fab fa-github"></i>
+              </button>
+              <button class="btn-icon btn-delete" onclick="window.removeFile('${file.id}')" title="Remover da galeria local">
+                <i class="fas fa-times"></i>
+              </button>
+            `;
+          } else {
+            actions = `
+              <button class="btn-icon btn-delete" onclick="window.removeFile('${file.id}')" title="Remover da galeria">
+                <i class="fas fa-trash"></i>
+              </button>
+            `;
+          }
+          
+          html += `
+            <div class="admin-edit-item">
+              ${isVideo ? 
+                `<video class="edit-thumb-video" muted>
+                  <source src="${fileUrl}" type="${file.type}">
+                </video>` : 
+                `<img class="edit-thumb" src="${fileUrl}" alt="${file.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'150\\' height=\\'120\\'%3E%3Crect width=\\'150\\' height=\\'120\\' fill=\\'%231a1a24\\'/%3E%3Ctext x=\\'75\\' y=\\'60\\' text-anchor=\\'middle\\' fill=\\'%23666\\' font-size=\\'12\\' font-family=\\'sans-serif\\'%3EErro%3C/text%3E%3C/svg%3E'">`
+              }
+              <div class="edit-info">
+                <span class="edit-name" title="${file.name}">${file.name}</span>
+                <span class="edit-badge ${badgeClass}">${badge}</span>
+              </div>
+              <div class="edit-actions">
+                ${actions}
+              </div>
+            </div>
+          `;
+        });
+
+        DOM.adminEditGrid.innerHTML = html;
+      }
+
+      // ============================================================
+      // 20. ADMIN - EXCLUIR DO GITHUB
+      // ============================================================
+      window.deleteFromGitHub = async function(fileId) {
+        const file = state.galleryFiles.find(f => f.id === fileId);
+        if (!file || !file.isGitHub) {
+          alert('Este arquivo não está no GitHub.');
+          return;
+        }
+
+        const token = localStorage.getItem(STORAGE_GITHUB_TOKEN) || DOM.adminGitHubToken.value;
+        const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || DOM.adminGitHubOwner.value;
+        const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || DOM.adminGitHubRepo.value;
+        const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || DOM.adminGitHubBranch.value || 'main';
+        const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
+
+        if (!token) {
+          alert('❌ Token necessário para excluir arquivos do GitHub! Configure na aba GitHub.');
+          return;
+        }
+
+        if (!owner || !repo) {
+          alert('❌ Configure o dono e nome do repositório primeiro!');
+          return;
+        }
+
+        if (!confirm(`Deseja excluir "${file.name}" do GitHub?\n\nRepositório: ${owner}/${repo}\nCaminho: ${path}/${file.name}`)) {
+          return;
+        }
+
+        try {
+          const filePath = path + '/' + file.name;
+          
+          const checkUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+          const checkResponse = await fetch(checkUrl, {
+            headers: { 'Authorization': `token ${token}` }
+          });
+
+          if (!checkResponse.ok) {
+            if (checkResponse.status === 404) {
+              throw new Error('Arquivo não encontrado no GitHub');
+            } else if (checkResponse.status === 401) {
+              throw new Error('Token inválido ou expirado');
+            } else {
+              const errorData = await checkResponse.json();
+              throw new Error(errorData.message || 'Erro ao verificar arquivo');
+            }
+          }
+
+          const data = await checkResponse.json();
+          const sha = data.sha;
+
+          const deleteUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+          const deleteResponse = await fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `token ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Delete: ${file.name}`,
+              sha: sha,
+              branch: branch
+            })
+          });
+
+          if (deleteResponse.ok) {
+            state.galleryFiles = state.galleryFiles.filter(f => f.id !== fileId);
+            saveGalleryData();
+            const msg = `✅ "${file.name}" excluído do GitHub com sucesso!`;
+            if (DOM.adminEditStatus) {
+              DOM.adminEditStatus.textContent = msg;
+              DOM.adminEditStatus.style.color = '#4caf50';
+            }
+            alert(msg);
+            carregarEditGrid();
+            setTimeout(() => carregarImagensDoGitHub(), 500);
+          } else {
+            const errorData = await deleteResponse.json();
+            throw new Error(errorData.message || 'Erro ao excluir');
+          }
+        } catch (error) {
+          const msg = `❌ Erro ao excluir: ${error.message}`;
+          if (DOM.adminEditStatus) {
+            DOM.adminEditStatus.textContent = msg;
+            DOM.adminEditStatus.style.color = '#ef5350';
+          }
+          alert(msg);
+        }
+      };
+
+      // ============================================================
+      // 21. ADMIN - REMOVER ARQUIVO LOCAL
+      // ============================================================
+      window.removeFile = function(id) {
+        const file = state.galleryFiles.find(f => f.id === id);
+        if (file && file.isGitHub) {
+          if (!confirm(`"${file.name}" está no GitHub. Deseja remover apenas da galeria local?`)) {
+            return;
+          }
+        }
+        state.galleryFiles = state.galleryFiles.filter(f => f.id !== id);
+        saveGalleryData();
+        carregarEditGrid();
+        if (DOM.adminEditStatus) {
+          DOM.adminEditStatus.textContent = '✅ Arquivo removido da galeria local.';
+          DOM.adminEditStatus.style.color = '#4caf50';
+          setTimeout(() => { DOM.adminEditStatus.textContent = ''; }, 2000);
+        }
+      };
+
+      // ============================================================
+      // 22. ADMIN - ADICIONAR IMAGEM
+      // ============================================================
+      function adminAddFiles(files) {
+        const validExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'video/mp4', 'video/webm', 'video/ogg'];
+        const invalidFiles = [];
+        const validFiles = [];
+
+        Array.from(files).forEach(file => {
+          if (validExtensions.includes(file.type)) {
+            validFiles.push(file);
+          } else {
+            invalidFiles.push(file.name);
+          }
+        });
+
+        if (invalidFiles.length > 0) {
+          alert(`Formatos não suportados: ${invalidFiles.join(', ')}\nUse imagens (JPEG, PNG, GIF, WEBP) ou vídeos (MP4, WEBM, OGG).`);
+        }
+
+        if (validFiles.length === 0) return;
+
+        validFiles.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const fileData = {
+              id: Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+              name: file.name,
+              type: file.type,
+              dataUrl: e.target.result,
+              isGitHub: false
+            };
+            state.galleryFiles.push(fileData);
+            saveGalleryData();
+            carregarEditGrid();
+            if (DOM.adminEditStatus) {
+              DOM.adminEditStatus.textContent = `✅ "${file.name}" adicionado à galeria local.`;
+              DOM.adminEditStatus.style.color = '#4caf50';
+              setTimeout(() => { DOM.adminEditStatus.textContent = ''; }, 3000);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      if (DOM.adminEditAddBtn) {
+        DOM.adminEditAddBtn.addEventListener('click', function() {
+          DOM.adminEditFileInput.click();
+        });
+      }
+
+      if (DOM.adminEditFileInput) {
+        DOM.adminEditFileInput.addEventListener('change', function(e) {
+          if (this.files && this.files.length > 0) {
+            adminAddFiles(this.files);
+            this.value = '';
+          }
+        });
+      }
+
+      // ============================================================
+      // 23. ADMIN - UPLOAD PARA GITHUB
+      // ============================================================
+      function updateAdminUploadList() {
+        if (!DOM.adminUploadFileList) return;
+        
+        if (state.selectedFiles.length === 0) {
+          DOM.adminUploadFileList.innerHTML = `<p style="color:#666;text-align:center;padding:10px;">Nenhum arquivo selecionado.</p>`;
+          return;
+        }
+
+        let html = '';
+        state.selectedFiles.forEach((file, index) => {
+          const size = Math.round(file.size / 1024);
+          const sizeText = size > 1024 ? (size/1024).toFixed(1) + ' MB' : size + ' KB';
+          html += `
+            <div class="admin-file-item" data-index="${index}">
+              <span><i class="fas fa-${file.type.startsWith('video/') ? 'video' : 'image'}"></i> ${file.name}</span>
+              <span class="file-size">${sizeText}</span>
+            </div>
+          `;
+        });
+        DOM.adminUploadFileList.innerHTML = html;
+      }
+
+      function adminHandleFileSelect(files) {
+        const validExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'video/mp4', 'video/webm', 'video/ogg'];
+        
+        Array.from(files).forEach(file => {
+          if (validExtensions.includes(file.type)) {
+            if (!state.selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+              state.selectedFiles.push(file);
+            }
+          } else {
+            alert(`Formato não suportado: ${file.name}\nUse imagens (JPEG, PNG, GIF, WEBP) ou vídeos (MP4, WEBM, OGG).`);
+          }
+        });
+        
+        updateAdminUploadList();
+        if (DOM.adminUploadStatus) {
+          DOM.adminUploadStatus.textContent = `${state.selectedFiles.length} arquivo(s) selecionado(s)`;
+          DOM.adminUploadStatus.style.color = '#4fc3f7';
+        }
+      }
+
+      if (DOM.adminDropZone) {
+        DOM.adminDropZone.addEventListener('click', function() {
+          DOM.adminUploadFileInput.click();
+        });
+
+        DOM.adminDropZone.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          this.classList.add('dragover');
+        });
+
+        DOM.adminDropZone.addEventListener('dragleave', function(e) {
+          e.preventDefault();
+          this.classList.remove('dragover');
+        });
+
+        DOM.adminDropZone.addEventListener('drop', function(e) {
+          e.preventDefault();
+          this.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            adminHandleFileSelect(e.dataTransfer.files);
+          }
+        });
+      }
+
+      if (DOM.adminUploadFileInput) {
+        DOM.adminUploadFileInput.addEventListener('change', function(e) {
+          if (this.files && this.files.length > 0) {
+            adminHandleFileSelect(this.files);
+            this.value = '';
+          }
+        });
+      }
+
+      if (DOM.adminClearSelectedBtn) {
+        DOM.adminClearSelectedBtn.addEventListener('click', function() {
+          if (state.selectedFiles.length === 0) return;
+          if (confirm('Deseja limpar todos os arquivos selecionados?')) {
+            state.selectedFiles = [];
+            updateAdminUploadList();
+            if (DOM.adminUploadStatus) {
+              DOM.adminUploadStatus.textContent = 'Seleção limpa';
+              DOM.adminUploadStatus.style.color = '#8888a0';
+              setTimeout(() => { DOM.adminUploadStatus.textContent = ''; }, 2000);
+            }
+          }
+        });
+      }
+
+      if (DOM.adminUploadSelectedBtn) {
+        DOM.adminUploadSelectedBtn.addEventListener('click', async function() {
+          const token = localStorage.getItem(STORAGE_GITHUB_TOKEN) || DOM.adminGitHubToken.value;
+          const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || DOM.adminGitHubOwner.value;
+          const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || DOM.adminGitHubRepo.value;
+          const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || DOM.adminGitHubBranch.value || 'main';
+          const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
+
+          if (!token) {
+            DOM.adminUploadStatus.textContent = '❌ Token necessário para enviar arquivos! Configure na aba GitHub.';
+            DOM.adminUploadStatus.style.color = '#ef5350';
+            return;
+          }
+
+          if (!owner || !repo) {
+            DOM.adminUploadStatus.textContent = '❌ Configure o dono e nome do repositório primeiro!';
+            DOM.adminUploadStatus.style.color = '#ef5350';
+            return;
+          }
+
+          if (state.selectedFiles.length === 0) {
+            DOM.adminUploadStatus.textContent = '❌ Nenhum arquivo selecionado!';
+            DOM.adminUploadStatus.style.color = '#ef5350';
+            return;
+          }
+
+          DOM.adminUploadSelectedBtn.disabled = true;
+          DOM.adminUploadSelectedBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+          DOM.adminUploadProgress.classList.add('active');
+          DOM.adminProgressBar.style.width = '0%';
+          DOM.adminUploadStatus.textContent = '';
+
+          let successCount = 0;
+          let failCount = 0;
+          const totalFiles = state.selectedFiles.length;
+
+          for (let i = 0; i < state.selectedFiles.length; i++) {
+            const file = state.selectedFiles[i];
+            try {
+              const percent = ((i / totalFiles) * 100);
+              DOM.adminProgressBar.style.width = percent + '%';
+              DOM.adminUploadStatus.textContent = `Enviando ${i+1}/${totalFiles}: ${file.name}`;
+              DOM.adminUploadStatus.style.color = '#4fc3f7';
+
+              const base64Data = await readFileAsBase64(file);
+              const fileName = file.name;
+              const filePath = path + '/' + fileName;
+
+              let sha = null;
+              try {
+                const checkUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+                const checkResponse = await fetch(checkUrl, {
+                  headers: { 'Authorization': `token ${token}` }
+                });
+                if (checkResponse.ok) {
+                  const data = await checkResponse.json();
+                  sha = data.sha;
+                }
+              } catch (e) {}
+
+              const uploadUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+              const payload = {
+                message: `Upload: ${fileName}`,
+                content: base64Data,
+                branch: branch
+              };
+              if (sha) {
+                payload.sha = sha;
+              }
+
+              const response = await fetch(uploadUrl, {
+                method: 'PUT',
+                headers: {
+                  'Authorization': `token ${token}`,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+              });
+
+              if (response.ok) {
+                successCount++;
+                DOM.adminUploadStatus.textContent = `✅ Enviado: ${fileName}`;
+                DOM.adminUploadStatus.style.color = '#4caf50';
+              } else {
+                const errorData = await response.json();
+                failCount++;
+                DOM.adminUploadStatus.textContent = `❌ Erro ao enviar ${fileName}: ${errorData.message || 'Erro desconhecido'}`;
+                DOM.adminUploadStatus.style.color = '#ef5350';
+              }
+            } catch (error) {
+              failCount++;
+              DOM.adminUploadStatus.textContent = `❌ Erro: ${error.message}`;
+              DOM.adminUploadStatus.style.color = '#ef5350';
+            }
+
+            await new Promise(r => setTimeout(r, 500));
+          }
+
+          DOM.adminProgressBar.style.width = '100%';
+          
+          if (failCount === 0) {
+            DOM.adminUploadStatus.textContent = `✅ Todos os ${successCount} arquivos foram enviados com sucesso!`;
+            DOM.adminUploadStatus.style.color = '#4caf50';
+            setTimeout(() => {
+              state.selectedFiles = [];
+              updateAdminUploadList();
+              carregarImagensDoGitHub();
+            }, 1500);
+          } else {
+            DOM.adminUploadStatus.textContent = `⚠️ ${successCount} enviados, ${failCount} falhas. Verifique os erros acima.`;
+            DOM.adminUploadStatus.style.color = '#ffb74d';
+          }
+
+          DOM.adminUploadSelectedBtn.disabled = false;
+          DOM.adminUploadSelectedBtn.innerHTML = '<i class="fab fa-github"></i> Enviar Selecionados';
+          
+          setTimeout(() => {
+            DOM.adminUploadProgress.classList.remove('active');
+          }, 3000);
+        });
+      }
+
+      function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const base64 = e.target.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = function() {
+            reject('Erro ao ler o arquivo');
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // ============================================================
+      // 24. ADMIN - TESTAR GITHUB CONEXÃO
+      // ============================================================
+      if (DOM.adminTestGitHubBtn) {
+        DOM.adminTestGitHubBtn.addEventListener('click', async function() {
+          const token = DOM.adminGitHubToken.value.trim();
+          const owner = DOM.adminGitHubOwner.value.trim();
+          const repo = DOM.adminGitHubRepo.value.trim();
+          const branch = DOM.adminGitHubBranch.value.trim() || 'main';
+          const path = DOM.adminGitHubPath.value.trim() || 'imagens';
+          
+          if (!owner || !repo) {
+            DOM.adminGitHubStatus.textContent = '⚠️ Preencha o dono e nome do repositório.';
+            DOM.adminGitHubStatus.style.color = '#ffb74d';
+            return;
+          }
+
+          try {
+            const readUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+            const readResponse = await fetch(readUrl);
+            
+            let readMessage = '';
+            let readSuccess = false;
+            
+            if (readResponse.ok) {
+              readSuccess = true;
+              readMessage = '✅ Leitura OK (repositório público)';
+            } else if (readResponse.status === 404) {
+              readMessage = '⚠️ Pasta não encontrada, mas repositório acessível';
+            } else if (readResponse.status === 403) {
+              readMessage = '⚠️ Repositório privado - necessário token para ler';
+            } else {
+              readMessage = `⚠️ Erro na leitura: ${readResponse.status}`;
+            }
+
+            let writeMessage = '';
+            if (token) {
+              try {
+                const testUrl = `https://api.github.com/repos/${owner}/${repo}`;
+                const testResponse = await fetch(testUrl, {
+                  headers: { 'Authorization': `token ${token}` }
+                });
+                if (testResponse.ok) {
+                  writeMessage = ' ✅ Token válido para escrita/exclusão';
+                } else {
+                  writeMessage = ' ❌ Token inválido ou sem permissão';
+                }
+              } catch (e) {
+                writeMessage = ' ❌ Erro ao testar token';
+              }
+            } else {
+              writeMessage = ' ℹ️ Token não fornecido (apenas leitura)';
+            }
+
+            DOM.adminGitHubStatus.textContent = readMessage + writeMessage;
+            DOM.adminGitHubStatus.style.color = readSuccess ? '#4caf50' : '#ffb74d';
+            
+          } catch (error) {
+            DOM.adminGitHubStatus.textContent = `❌ Erro: ${error.message}`;
+            DOM.adminGitHubStatus.style.color = '#ef5350';
+          }
+        });
+      }
+
+      // ============================================================
+      // 25. BAIXAR IMAGEM
       // ============================================================
       function baixarImagem() {
         if (!state.currentLightboxFile) {
@@ -1459,8 +2719,15 @@
         }
       }
 
+      if (DOM.btnDownload) {
+        DOM.btnDownload.addEventListener('click', function(e) {
+          e.stopPropagation();
+          baixarImagem();
+        });
+      }
+
       // ============================================================
-      // 16. COMPARTILHAR IMAGEM
+      // 26. COMPARTILHAR IMAGEM
       // ============================================================
       const shareApps = [
         { id: 'whatsapp', name: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366' },
@@ -1602,8 +2869,27 @@
         fecharShareModal();
       };
 
+      if (DOM.btnShare) {
+        DOM.btnShare.addEventListener('click', function(e) {
+          e.stopPropagation();
+          abrirShareModal();
+        });
+      }
+
+      if (DOM.shareClose) {
+        DOM.shareClose.addEventListener('click', fecharShareModal);
+      }
+
+      if (DOM.shareModal) {
+        DOM.shareModal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            fecharShareModal();
+          }
+        });
+      }
+
       // ============================================================
-      // 17. COPIAR E-MAIL
+      // 27. COPIAR E-MAIL
       // ============================================================
       if (DOM.copyBtn) {
         DOM.copyBtn.addEventListener('click', async () => {
@@ -1637,9 +2923,10 @@
       }
 
       // ============================================================
-      // 18. EVENTOS DOS BOTÕES
+      // 28. EVENTOS DOS BOTÕES
       // ============================================================
 
+      // Abrir Galeria
       if (DOM.openGalleryBtn) {
         DOM.openGalleryBtn.addEventListener('click', function() {
           loadGalleryData();
@@ -1647,6 +2934,7 @@
         });
       }
 
+      // Fechar Galeria clicando fora
       if (DOM.galleryModal) {
         DOM.galleryModal.addEventListener('click', function(e) {
           if (e.target === this) {
@@ -1655,6 +2943,7 @@
         });
       }
 
+      // Lightbox - Voltar
       if (DOM.lightboxVoltar) {
         DOM.lightboxVoltar.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -1663,6 +2952,7 @@
         });
       }
 
+      // Lightbox - Fechar clicando fora
       if (DOM.lightbox) {
         DOM.lightbox.addEventListener('click', function(e) {
           if (e.target === this) {
@@ -1671,6 +2961,7 @@
         });
       }
 
+      // Lightbox - Navegação
       if (DOM.lightboxPrev) {
         DOM.lightboxPrev.addEventListener('click', function(e) {
           e.stopPropagation();
@@ -1685,34 +2976,90 @@
         });
       }
 
-      if (DOM.btnDownload) {
-        DOM.btnDownload.addEventListener('click', function(e) {
-          e.stopPropagation();
-          baixarImagem();
-        });
-      }
+      // ============================================================
+      // 29. SALVAR MENSAGEM NO GITHUB
+      // ============================================================
+      if (DOM.adminSyncMensagemBtn) {
+        DOM.adminSyncMensagemBtn.addEventListener('click', async function() {
+          const token = localStorage.getItem(STORAGE_GITHUB_TOKEN) || DOM.adminGitHubToken.value;
+          const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || DOM.adminGitHubOwner.value;
+          const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || DOM.adminGitHubRepo.value;
+          const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || DOM.adminGitHubBranch.value || 'main';
+          const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
 
-      if (DOM.btnShare) {
-        DOM.btnShare.addEventListener('click', function(e) {
-          e.stopPropagation();
-          abrirShareModal();
-        });
-      }
-
-      if (DOM.shareClose) {
-        DOM.shareClose.addEventListener('click', fecharShareModal);
-      }
-
-      if (DOM.shareModal) {
-        DOM.shareModal.addEventListener('click', function(e) {
-          if (e.target === this) {
-            fecharShareModal();
+          const texto = DOM.adminMensagemInput.value.trim();
+          if (!texto) {
+            DOM.adminMensagemStatus.textContent = '⚠️ Digite uma mensagem antes de salvar.';
+            DOM.adminMensagemStatus.style.color = '#ffb74d';
+            return;
           }
+
+          if (!token || !owner || !repo) {
+            DOM.adminMensagemStatus.textContent = '❌ Configure o token e repositório na aba GitHub!';
+            DOM.adminMensagemStatus.style.color = '#ef5350';
+            return;
+          }
+
+          DOM.adminSyncMensagemBtn.disabled = true;
+          DOM.adminSyncMensagemBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+          try {
+            const fileName = 'mensagem.txt';
+            const filePath = path + '/' + fileName;
+            const base64Data = btoa(unescape(encodeURIComponent(texto)));
+
+            let sha = null;
+            try {
+              const checkUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+              const checkResponse = await fetch(checkUrl, {
+                headers: { 'Authorization': `token ${token}` }
+              });
+              if (checkResponse.ok) {
+                const data = await checkResponse.json();
+                sha = data.sha;
+              }
+            } catch (e) {}
+
+            const uploadUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+            const payload = {
+              message: `Atualizar mensagem: ${texto.substring(0, 50)}...`,
+              content: base64Data,
+              branch: branch
+            };
+            if (sha) {
+              payload.sha = sha;
+            }
+
+            const response = await fetch(uploadUrl, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+              localStorage.setItem(STORAGE_MENSAGEM_GITHUB, texto);
+              saveMensagemAdmin(texto);
+              DOM.adminMensagemStatus.textContent = '✅ Mensagem salva no GitHub com sucesso!';
+              DOM.adminMensagemStatus.style.color = '#4caf50';
+            } else {
+              const errorData = await response.json();
+              throw new Error(errorData.message || 'Erro ao salvar no GitHub');
+            }
+          } catch (error) {
+            DOM.adminMensagemStatus.textContent = `❌ Erro ao salvar no GitHub: ${error.message}`;
+            DOM.adminMensagemStatus.style.color = '#ef5350';
+          }
+
+          DOM.adminSyncMensagemBtn.disabled = false;
+          DOM.adminSyncMensagemBtn.innerHTML = '<i class="fab fa-github"></i> Salvar no GitHub';
         });
       }
 
       // ============================================================
-      // 19. INICIALIZAÇÃO
+      // 30. INICIALIZAÇÃO
       // ============================================================
       loadMensagem();
       loadGalleryData();
