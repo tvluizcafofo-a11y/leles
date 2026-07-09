@@ -1310,19 +1310,16 @@
   </div>
 
   <!-- ============================================================
-       ADMIN MODAL (INTEGRADO)
+       ADMIN MODAL
   ============================================================ -->
   <div class="admin-modal" id="adminModal">
     <div class="admin-modal-content">
-      <!-- Cabeçalho Admin -->
       <div class="admin-header">
         <h1>Painel <span>Admin</span></h1>
         <button class="admin-close" id="adminCloseBtn">
           <i class="fas fa-times"></i> Fechar
         </button>
       </div>
-
-      <!-- Tabs Admin -->
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="adminConfig">Configurações</button>
         <button class="admin-tab" data-tab="adminMensagem">Mensagem</button>
@@ -1331,7 +1328,6 @@
         <button class="admin-tab" data-tab="adminEdit">Editar</button>
       </div>
 
-      <!-- ABA CONFIGURAÇÕES -->
       <div id="adminConfig" class="admin-tab-content active">
         <p style="margin-bottom: 10px; color: #b0a8a0;">Informações do site.</p>
         <div class="admin-contador">
@@ -1341,10 +1337,9 @@
         </div>
       </div>
 
-      <!-- ABA MENSAGEM -->
       <div id="adminMensagem" class="admin-tab-content">
         <div class="admin-alert">
-          <strong>✏️ Mensagem da Página Inicial:</strong> Edite a mensagem que aparece no topo da página principal.
+          <strong>✏️ Mensagem da Página Inicial:</strong> Edite a mensagem que aparece no topo.
         </div>
         <div class="admin-mensagem-preview">
           <i class="fas fa-quote-left"></i>
@@ -1352,81 +1347,56 @@
         </div>
         <form id="adminMensagemForm">
           <label class="admin-label" for="adminMensagemInput">Editar Mensagem</label>
-          <textarea class="admin-textarea" id="adminMensagemInput" placeholder="Digite a mensagem que aparecerá na página inicial..."></textarea>
+          <textarea class="admin-textarea" id="adminMensagemInput" placeholder="Digite a mensagem..."></textarea>
           <div class="admin-btn-group">
-            <button type="submit" class="admin-btn admin-btn-primary">
-              <i class="fas fa-save"></i> Salvar Mensagem
-            </button>
-            <button type="button" class="admin-btn admin-btn-secondary" id="adminResetMensagemBtn">
-              <i class="fas fa-undo"></i> Restaurar Padrão
-            </button>
-            <button type="button" class="admin-btn admin-btn-success" id="adminSyncMensagemBtn">
-              <i class="fab fa-github"></i> Salvar no GitHub
-            </button>
+            <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Salvar</button>
+            <button type="button" class="admin-btn admin-btn-secondary" id="adminResetMensagemBtn"><i class="fas fa-undo"></i> Restaurar</button>
+            <button type="button" class="admin-btn admin-btn-success" id="adminSyncMensagemBtn"><i class="fab fa-github"></i> Salvar no GitHub</button>
           </div>
           <div id="adminMensagemStatus" class="admin-status"></div>
         </form>
       </div>
 
-      <!-- ABA GITHUB -->
       <div id="adminGitHub" class="admin-tab-content">
         <div class="admin-alert">
-          <strong>⚠️ Atenção:</strong> Para <span class="highlight">CARREGAR</span> imagens do GitHub, o repositório deve ser <span class="highlight">PÚBLICO</span>.<br>
-          O token é necessário apenas para <span class="highlight">ENVIAR</span> e <span class="highlight">EXCLUIR</span> arquivos.
+          <strong>⚠️ Atenção:</strong> Repositório <span class="highlight">PÚBLICO</span> para leitura.<br>
+          Token necessário apenas para <span class="highlight">ENVIAR</span> e <span class="highlight">EXCLUIR</span>.
         </div>
-        <p style="color:#b0a8a0;margin-bottom:15px;">Configure as credenciais do repositório.</p>
         <form id="adminGitHubForm">
-          <label class="admin-label" for="adminGitHubToken">Token de Acesso Pessoal (PAT) - <span style="color:#f1c40f;">Opcional para leitura</span></label>
-          <input class="admin-input" type="password" id="adminGitHubToken" placeholder="github_pat_xxx... (só para upload/exclusão)">
-          <small style="color:#666;display:block;margin-top:-12px;margin-bottom:12px;">
-            <a href="https://github.com/settings/tokens" target="_blank" style="color:#f1c40f;">Criar token</a> (necessário para <strong>ENVIAR</strong> e <strong>EXCLUIR</strong> arquivos)
-          </small>
-
-          <label class="admin-label" for="adminGitHubOwner">Dono do repositório <span style="color:#f1c40f;">*</span></label>
+          <label class="admin-label" for="adminGitHubToken">Token (opcional para leitura)</label>
+          <input class="admin-input" type="password" id="adminGitHubToken" placeholder="github_pat_xxx...">
+          <label class="admin-label" for="adminGitHubOwner">Dono <span style="color:#f1c40f;">*</span></label>
           <input class="admin-input" type="text" id="adminGitHubOwner" placeholder="seu-usuario" value="vluizcafofo-a11y">
-
-          <label class="admin-label" for="adminGitHubRepo">Nome do repositório <span style="color:#f1c40f;">*</span></label>
+          <label class="admin-label" for="adminGitHubRepo">Repositório <span style="color:#f1c40f;">*</span></label>
           <input class="admin-input" type="text" id="adminGitHubRepo" placeholder="seu-repositorio" value="leles">
-
           <label class="admin-label" for="adminGitHubBranch">Branch</label>
           <input class="admin-input" type="text" id="adminGitHubBranch" placeholder="main" value="main">
-
-          <label class="admin-label" for="adminGitHubPath">Pasta de destino</label>
+          <label class="admin-label" for="adminGitHubPath">Pasta</label>
           <input class="admin-input" type="text" id="adminGitHubPath" placeholder="imagens" value="imagens">
-
           <div id="adminGitHubStatus" class="admin-status"></div>
-
           <div class="admin-btn-group">
-            <button type="submit" class="admin-btn admin-btn-primary">Salvar configurações</button>
-            <button type="button" class="admin-btn admin-btn-secondary" id="adminTestGitHubBtn">Testar conexão</button>
+            <button type="submit" class="admin-btn admin-btn-primary">Salvar</button>
+            <button type="button" class="admin-btn admin-btn-secondary" id="adminTestGitHubBtn">Testar</button>
           </div>
         </form>
       </div>
 
-      <!-- ABA UPLOAD -->
       <div id="adminUpload" class="admin-tab-content">
         <div class="admin-alert">
-          <strong>📤 Upload para GitHub:</strong> Selecione as fotos e vídeos para enviar ao repositório.<br>
+          <strong>📤 Upload:</strong> Envie arquivos para o GitHub.<br>
           <span style="color:#f1c40f;">⚠️ Necessário token com permissão 'repo'</span>
         </div>
         <div class="admin-drop-zone" id="adminDropZone">
           <i class="fas fa-cloud-upload-alt"></i>
           <p><strong>Clique aqui</strong> ou arraste arquivos</p>
-          <p style="font-size:0.85rem;color:#666;margin-top:5px;">
-            Suporta: JPEG, PNG, GIF, WEBP, MP4, WEBM, OGG
-          </p>
         </div>
         <input type="file" id="adminUploadFileInput" class="file-input-hidden" multiple accept="image/*,video/*">
         <div id="adminUploadFileList" class="admin-file-list">
           <p style="color:#666;text-align:center;padding:10px;">Nenhum arquivo selecionado.</p>
         </div>
         <div class="admin-btn-group" style="justify-content:center;margin-top:15px;flex-wrap:wrap;">
-          <button class="admin-btn admin-btn-primary" id="adminUploadSelectedBtn">
-            <i class="fab fa-github"></i> Enviar Selecionados
-          </button>
-          <button class="admin-btn admin-btn-secondary" id="adminClearSelectedBtn">
-            <i class="fas fa-times"></i> Limpar Seleção
-          </button>
+          <button class="admin-btn admin-btn-primary" id="adminUploadSelectedBtn"><i class="fab fa-github"></i> Enviar</button>
+          <button class="admin-btn admin-btn-secondary" id="adminClearSelectedBtn"><i class="fas fa-times"></i> Limpar</button>
         </div>
         <div class="admin-upload-progress" id="adminUploadProgress">
           <div class="progress-bar" id="adminProgressBar"></div>
@@ -1434,16 +1404,12 @@
         <div id="adminUploadStatus" class="admin-status"></div>
       </div>
 
-      <!-- ABA EDITAR -->
       <div id="adminEdit" class="admin-tab-content">
         <div class="admin-alert">
-          <strong>✏️ Editar Galeria:</strong> Inclua ou exclua imagens da galeria.<br>
-          <span style="color:#f1c40f;">⚠️ Para excluir do GitHub, é necessário token com permissão 'repo'</span>
+          <strong>✏️ Editar Galeria:</strong> Inclua ou exclua imagens.
         </div>
         <div class="admin-btn-group" style="justify-content:center;margin-bottom:15px;">
-          <button class="admin-btn admin-btn-primary" id="adminEditAddBtn">
-            <i class="fas fa-plus"></i> Incluir Imagem
-          </button>
+          <button class="admin-btn admin-btn-primary" id="adminEditAddBtn"><i class="fas fa-plus"></i> Incluir Imagem</button>
         </div>
         <input type="file" id="adminEditFileInput" class="file-input-hidden" multiple accept="image/*,video/*">
         <div class="admin-edit-grid" id="adminEditGrid"></div>
@@ -1457,7 +1423,7 @@
       'use strict';
 
       // ============================================================
-      // 1. REFERÊNCIAS DOS ELEMENTOS
+      // 1. REFERÊNCIAS
       // ============================================================
       const DOM = {
         secretLeft: document.getElementById('secretLeft'),
@@ -1558,7 +1524,8 @@
         clickTimer: null,
         selectedFiles: [],
         isLoading: false,
-        githubConfig: { ...GITHUB_CONFIG }
+        githubConfig: { ...GITHUB_CONFIG },
+        isLoadingFromGitHub: false
       };
 
       // ============================================================
@@ -1682,6 +1649,7 @@
             if (target) target.classList.add('active');
             if (tabId === 'adminEdit') carregarEditGrid();
             if (tabId === 'adminMensagem') carregarMensagemAdmin();
+            if (tabId === 'adminGitHub') carregarGitHubAdmin();
           });
         });
       }
@@ -1834,27 +1802,35 @@
       }
 
       // ============================================================
-      // 13. CARREGAR IMAGENS DO GITHUB
+      // 13. CARREGAR IMAGENS DO GITHUB - CORRIGIDO
       // ============================================================
       async function carregarImagensDoGitHub() {
+        if (state.isLoadingFromGitHub) return;
+        state.isLoadingFromGitHub = true;
+
         const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || GITHUB_CONFIG.owner;
         const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || GITHUB_CONFIG.repo;
         const path = localStorage.getItem(STORAGE_GITHUB_PATH) || GITHUB_CONFIG.path;
         const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || GITHUB_CONFIG.branch;
 
+        log('Carregando imagens do GitHub:', owner, repo, path);
+
         if (!owner || !repo) {
           log('GitHub não configurado');
+          state.isLoadingFromGitHub = false;
           return;
         }
 
         try {
+          // Usar a API do GitHub para listar arquivos
           const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
-          log('Buscando imagens do GitHub...');
+          log('Buscando:', url);
           
           const response = await fetch(url);
           
           if (!response.ok) {
             log('Erro ao buscar imagens do GitHub:', response.status);
+            state.isLoadingFromGitHub = false;
             return;
           }
 
@@ -1862,9 +1838,11 @@
           
           if (!Array.isArray(files)) {
             log('Resposta não é um array');
+            state.isLoadingFromGitHub = false;
             return;
           }
 
+          // Filtrar arquivos de imagem e vídeo
           const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.webm', '.ogg'];
           const mediaFiles = files.filter(file => {
             const ext = file.name.toLowerCase();
@@ -1874,35 +1852,39 @@
           log('Arquivos de mídia encontrados:', mediaFiles.length);
 
           if (mediaFiles.length === 0) {
+            log('Nenhum arquivo de mídia encontrado');
+            state.isLoadingFromGitHub = false;
             return;
           }
 
+          // URL base para as imagens (RAW)
           const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+          
+          // Limpar arquivos do GitHub antigos (manter apenas locais)
+          const localFiles = state.galleryFiles.filter(f => !f.isGitHub);
+          
+          // Criar nova lista com arquivos do GitHub
+          const githubFiles = [];
           let addedCount = 0;
 
-          const existingFiles = state.galleryFiles.filter(f => !f.isGitHub);
-          state.galleryFiles = state.galleryFiles.filter(f => !f.isGitHub);
-          
           mediaFiles.forEach(file => {
-            const exists = state.galleryFiles.some(f => f.name === file.name && f.isGitHub);
-            if (!exists) {
-              const fileData = {
-                id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-                name: file.name,
-                type: file.type || (file.name.match(/\.(mp4|webm|ogg)$/) ? 'video/mp4' : 'image/jpeg'),
-                path: file.path,
-                isGitHub: true,
-                gitUrl: `${baseUrl}/${file.name}`
-              };
-              state.galleryFiles.push(fileData);
-              addedCount++;
-            }
+            const fileData = {
+              id: 'github_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+              name: file.name,
+              type: file.type || (file.name.match(/\.(mp4|webm|ogg)$/) ? 'video/mp4' : 'image/jpeg'),
+              path: file.path,
+              isGitHub: true,
+              gitUrl: `${baseUrl}/${file.name}`
+            };
+            githubFiles.push(fileData);
+            addedCount++;
           });
 
-          existingFiles.forEach(f => { state.galleryFiles.push(f); });
+          // Combinar arquivos locais + GitHub
+          state.galleryFiles = [...localFiles, ...githubFiles];
 
           if (addedCount > 0) {
-            log(`${addedCount} novos arquivos carregados do GitHub`);
+            log(`${addedCount} arquivos carregados do GitHub`);
             saveGalleryData();
           } else {
             renderGallery();
@@ -1912,6 +1894,8 @@
         } catch (error) {
           log('Erro ao carregar imagens do GitHub:', error);
         }
+
+        state.isLoadingFromGitHub = false;
       }
 
       // ============================================================
@@ -1920,6 +1904,7 @@
       function renderMiniaturas() {
         if (!DOM.miniaturasGrid) return;
 
+        // Pegar apenas imagens (não vídeos)
         const imagens = state.galleryFiles.filter(f => !f.type.startsWith('video/'));
         const miniaturas = imagens.slice(0, MINIATURAS_QTD);
 
@@ -1936,7 +1921,7 @@
 
         let html = '';
         miniaturas.forEach((file, index) => {
-          const fileUrl = file.dataUrl || file.gitUrl || file.path;
+          const fileUrl = file.gitUrl || file.dataUrl || file.path;
           const isGitHub = file.isGitHub;
           html += `
             <div class="miniatura-item" data-index="${index}">
@@ -1988,7 +1973,8 @@
         let html = '';
         state.galleryFiles.forEach((file, index) => {
           const isVideo = file.type.startsWith('video/');
-          const fileUrl = file.dataUrl || file.gitUrl || file.path;
+          // PRIORIZAR URL DO GITHUB (gitUrl) para imagens do GitHub
+          const fileUrl = file.gitUrl || file.dataUrl || file.path;
           const sourceIcon = file.isGitHub ? '<i class="fab fa-github github-icon"></i>' : '';
 
           html += `
@@ -2064,7 +2050,8 @@
 
         state.currentLightboxFile = file;
         state.shareImageData = file;
-        const fileUrl = file.dataUrl || file.gitUrl || file.path;
+        // PRIORIZAR URL DO GITHUB
+        const fileUrl = file.gitUrl || file.dataUrl || file.path;
 
         if (DOM.lightboxContent) {
           DOM.lightboxContent.innerHTML = `<img src="${fileUrl}" alt="${file.name}" style="max-width:95vw;max-height:85vh;width:auto;height:auto;object-fit:contain;display:block;">`;
@@ -2154,7 +2141,7 @@
         let html = '';
         state.galleryFiles.forEach(file => {
           const isVideo = file.type.startsWith('video/');
-          const fileUrl = file.dataUrl || file.gitUrl || file.path;
+          const fileUrl = file.gitUrl || file.dataUrl || file.path;
           
           let badge = 'Local';
           let badgeClass = '';
@@ -2676,7 +2663,7 @@
           return;
         }
 
-        const fileUrl = state.currentLightboxFile.dataUrl || state.currentLightboxFile.gitUrl || state.currentLightboxFile.path;
+        const fileUrl = state.currentLightboxFile.gitUrl || state.currentLightboxFile.dataUrl || state.currentLightboxFile.path;
         const fileName = state.currentLightboxFile.name;
 
         if (!fileUrl) {
@@ -2762,7 +2749,7 @@
       }
 
       function renderShareApps() {
-        const fileUrl = state.shareImageData.dataUrl || state.shareImageData.gitUrl || state.shareImageData.path;
+        const fileUrl = state.shareImageData.gitUrl || state.shareImageData.dataUrl || state.shareImageData.path;
         const encodedUrl = encodeURIComponent(fileUrl);
         const encodedText = encodeURIComponent('📸 Veja esta imagem da Leles Acessórios!');
 
@@ -2841,7 +2828,7 @@
 
       window.shareNative = function() {
         if (navigator.share) {
-          const fileUrl = state.shareImageData.dataUrl || state.shareImageData.gitUrl || state.shareImageData.path;
+          const fileUrl = state.shareImageData.gitUrl || state.shareImageData.dataUrl || state.shareImageData.path;
           const fileName = state.shareImageData.name;
 
           if (fileUrl.startsWith('data:')) {
@@ -2864,7 +2851,7 @@
             }).catch(() => copyToClipboard(fileUrl));
           }
         } else {
-          copyToClipboard(state.shareImageData.dataUrl || state.shareImageData.gitUrl || state.shareImageData.path);
+          copyToClipboard(state.shareImageData.gitUrl || state.shareImageData.dataUrl || state.shareImageData.path);
         }
         fecharShareModal();
       };
@@ -3064,11 +3051,12 @@
       loadMensagem();
       loadGalleryData();
       
+      // Carregar imagens do GitHub automaticamente
       setTimeout(async () => {
         await carregarImagensDoGitHub();
         renderGallery();
         renderMiniaturas();
-      }, 1500);
+      }, 1000);
 
       log('App inicializado!');
 
