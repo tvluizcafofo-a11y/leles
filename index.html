@@ -1266,7 +1266,7 @@
         <h2><i class="fas fa-images"></i> Galeria</h2>
         <div class="gallery-actions">
           <span class="contador-midias" id="contadorMidias">0 arquivos</span>
-          <button class="btn-voltar-gallery" id="btnVoltarGaleria" onclick="window.voltarParaPrincipal()">
+          <button class="btn-voltar-gallery" id="btnVoltarGaleria">
             <i class="fas fa-arrow-left"></i> Voltar
           </button>
         </div>
@@ -1339,7 +1339,8 @@
 
       <div id="adminMensagem" class="admin-tab-content">
         <div class="admin-alert">
-          <strong>✏️ Mensagem da Página Inicial:</strong> Edite a mensagem que aparece no topo.
+          <strong>✏️ Mensagem da Página Inicial:</strong> A mensagem é salva na pasta <span class="highlight">imagens</span> do GitHub.<br>
+          <span style="color:#f1c40f;">📁 Arquivo: mensagem.txt</span>
         </div>
         <div class="admin-mensagem-preview">
           <i class="fas fa-quote-left"></i>
@@ -1371,7 +1372,7 @@
           <input class="admin-input" type="text" id="adminGitHubRepo" placeholder="seu-repositorio" value="leles">
           <label class="admin-label" for="adminGitHubBranch">Branch</label>
           <input class="admin-input" type="text" id="adminGitHubBranch" placeholder="main" value="main">
-          <label class="admin-label" for="adminGitHubPath">Pasta</label>
+          <label class="admin-label" for="adminGitHubPath">Pasta de destino</label>
           <input class="admin-input" type="text" id="adminGitHubPath" placeholder="imagens" value="imagens">
           <div id="adminGitHubStatus" class="admin-status"></div>
           <div class="admin-btn-group">
@@ -1491,7 +1492,6 @@
       const STORAGE_GITHUB_REPO = 'leles_github_repo';
       const STORAGE_GITHUB_BRANCH = 'leles_github_branch';
       const STORAGE_GITHUB_PATH = 'leles_github_path';
-      const STORAGE_MENSAGEM_GITHUB = 'leles_mensagem_github';
       const EMAIL_FIXO = 'leles4x4@yahoo.com.br';
       const REQUIRED_CLICKS = 7;
       const TIME_LIMIT = 2000;
@@ -1524,7 +1524,8 @@
         selectedFiles: [],
         isLoading: false,
         isLoadingFromGitHub: false,
-        githubFilesLoaded: false
+        githubFilesLoaded: false,
+        mensagemGitHub: null
       };
 
       // ============================================================
@@ -1654,8 +1655,44 @@
       }
 
       // ============================================================
-      // 9. MENSAGEM
+      // 9. MENSAGEM - CARREGAR DO GITHUB
       // ============================================================
+      async function carregarMensagemDoGitHub() {
+        const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || GITHUB_CONFIG.owner;
+        const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || GITHUB_CONFIG.repo;
+        const path = localStorage.getItem(STORAGE_GITHUB_PATH) || GITHUB_CONFIG.path;
+        const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || GITHUB_CONFIG.branch;
+
+        if (!owner || !repo) {
+          log('GitHub não configurado para carregar mensagem');
+          return;
+        }
+
+        try {
+          const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}/mensagem.txt`;
+          log('Buscando mensagem do GitHub:', url);
+          
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            log('Mensagem não encontrada no GitHub, usando padrão');
+            return;
+          }
+
+          const texto = await response.text();
+          if (texto && texto.trim() !== '') {
+            state.mensagemGitHub = texto.trim();
+            localStorage.setItem(STORAGE_MENSAGEM, texto.trim());
+            if (DOM.mensagemTexto) {
+              DOM.mensagemTexto.textContent = texto.trim();
+            }
+            log('Mensagem carregada do GitHub:', texto.trim());
+          }
+        } catch (error) {
+          log('Erro ao carregar mensagem do GitHub:', error);
+        }
+      }
+
       function loadMensagem() {
         try {
           const saved = localStorage.getItem(STORAGE_MENSAGEM);
@@ -1675,8 +1712,7 @@
 
       function carregarMensagemAdmin() {
         const saved = localStorage.getItem(STORAGE_MENSAGEM);
-        const github = localStorage.getItem(STORAGE_MENSAGEM_GITHUB);
-        const texto = github || saved || 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
+        const texto = saved || 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
         if (DOM.adminMensagemInput) DOM.adminMensagemInput.value = texto;
         if (DOM.adminPreviewMensagem) DOM.adminPreviewMensagem.textContent = texto;
       }
@@ -1686,7 +1722,7 @@
         if (DOM.mensagemTexto) DOM.mensagemTexto.textContent = texto;
         if (DOM.adminPreviewMensagem) DOM.adminPreviewMensagem.textContent = texto;
         if (DOM.adminMensagemStatus) {
-          DOM.adminMensagemStatus.textContent = '✅ Mensagem salva com sucesso!';
+          DOM.adminMensagemStatus.textContent = '✅ Mensagem salva localmente!';
           DOM.adminMensagemStatus.style.color = '#4caf50';
           setTimeout(() => { DOM.adminMensagemStatus.textContent = ''; }, 3000);
         }
@@ -1702,7 +1738,6 @@
             return;
           }
           saveMensagemAdmin(texto);
-          localStorage.removeItem(STORAGE_MENSAGEM_GITHUB);
         });
       }
 
@@ -1711,7 +1746,6 @@
           const padrao = 'Bem-vindo à Leles Acessórios! Confira nossos destaques abaixo.';
           DOM.adminMensagemInput.value = padrao;
           saveMensagemAdmin(padrao);
-          localStorage.removeItem(STORAGE_MENSAGEM_GITHUB);
         });
       }
 
@@ -1737,8 +1771,10 @@
           DOM.adminGitHubStatus.style.color = '#4caf50';
           setTimeout(() => { DOM.adminGitHubStatus.textContent = ''; }, 3000);
         }
-        // Recarregar imagens após salvar configurações
-        setTimeout(() => carregarImagensDoGitHub(), 500);
+        setTimeout(() => {
+          carregarImagensDoGitHub();
+          carregarMensagemDoGitHub();
+        }, 500);
       }
 
       if (DOM.adminGitHubForm) {
@@ -1768,13 +1804,12 @@
       }
 
       // ============================================================
-      // 12. GALERIA - CARREGAR DO GITHUB (PRIORIDADE)
+      // 12. GALERIA - CARREGAR DO GITHUB
       // ============================================================
       async function carregarImagensDoGitHub() {
         if (state.isLoadingFromGitHub) return;
         state.isLoadingFromGitHub = true;
 
-        // Usar configurações salvas ou as fixas
         const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || GITHUB_CONFIG.owner;
         const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || GITHUB_CONFIG.repo;
         const path = localStorage.getItem(STORAGE_GITHUB_PATH) || GITHUB_CONFIG.path;
@@ -1789,7 +1824,6 @@
         }
 
         try {
-          // Buscar lista de arquivos da pasta no GitHub
           const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
           log('Buscando:', url);
           
@@ -1809,7 +1843,6 @@
             return;
           }
 
-          // Filtrar arquivos de imagem e vídeo
           const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.webm', '.ogg'];
           const mediaFiles = files.filter(file => {
             const ext = file.name.toLowerCase();
@@ -1818,21 +1851,8 @@
 
           log('Arquivos de mídia encontrados:', mediaFiles.length);
 
-          if (mediaFiles.length === 0) {
-            log('Nenhum arquivo de mídia encontrado na pasta');
-            state.isLoadingFromGitHub = false;
-            // Mostrar mensagem na galeria
-            renderGallery();
-            renderMiniaturas();
-            return;
-          }
-
-          // URL base para as imagens (RAW)
-          const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
-          
-          // Criar lista de arquivos do GitHub
           const githubFiles = [];
-          let addedCount = 0;
+          const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
 
           mediaFiles.forEach(file => {
             const fileData = {
@@ -1844,15 +1864,12 @@
               gitUrl: `${baseUrl}/${file.name}`
             };
             githubFiles.push(fileData);
-            addedCount++;
           });
 
-          // SUBSTITUIR completamente a galeria pelas imagens do GitHub
-          // (não manter imagens locais para garantir consistência entre dispositivos)
           state.galleryFiles = githubFiles;
 
-          if (addedCount > 0) {
-            log(`${addedCount} arquivos carregados do GitHub`);
+          if (mediaFiles.length > 0) {
+            log(`${mediaFiles.length} arquivos carregados do GitHub`);
             state.githubFilesLoaded = true;
             saveGalleryData();
           } else {
@@ -1862,7 +1879,6 @@
 
         } catch (error) {
           log('Erro ao carregar imagens do GitHub:', error);
-          // Se falhar, tentar carregar do localStorage como fallback
           carregarDoLocalStorage();
         }
 
@@ -1890,7 +1906,7 @@
       }
 
       // ============================================================
-      // 14. GALERIA - SALVAR (APENAS PARA REFERÊNCIA)
+      // 14. GALERIA - SALVAR
       // ============================================================
       function saveGalleryData() {
         try {
@@ -1935,7 +1951,6 @@
 
         let html = '';
         miniaturas.forEach((file, index) => {
-          // PRIORIZAR URL DO GITHUB
           const fileUrl = file.gitUrl || file.dataUrl || file.path;
           const isGitHub = file.isGitHub;
           html += `
@@ -1990,7 +2005,6 @@
         let html = '';
         state.galleryFiles.forEach((file, index) => {
           const isVideo = file.type.startsWith('video/');
-          // PRIORIZAR URL DO GITHUB
           const fileUrl = file.gitUrl || file.dataUrl || file.path;
           const sourceIcon = file.isGitHub ? '<i class="fab fa-github github-icon"></i>' : '';
 
@@ -2067,7 +2081,6 @@
 
         state.currentLightboxFile = file;
         state.shareImageData = file;
-        // PRIORIZAR URL DO GITHUB
         const fileUrl = file.gitUrl || file.dataUrl || file.path;
 
         if (DOM.lightboxContent) {
@@ -2108,16 +2121,18 @@
       }
 
       // ============================================================
-      // 19. VOLTAR PARA A PÁGINA PRINCIPAL
+      // 19. VOLTAR PARA A PÁGINA PRINCIPAL - CORRIGIDO
       // ============================================================
-      window.voltarParaPrincipal = function() {
+      function voltarParaPrincipal() {
         log('Voltar para página principal');
         
+        // Fechar a galeria
         if (DOM.galleryModal) {
           DOM.galleryModal.classList.remove('active');
           state.isGalleryOpen = false;
         }
         
+        // Fechar o lightbox
         if (DOM.lightbox) {
           DOM.lightbox.classList.remove('active');
           state.isLightboxOpen = false;
@@ -2126,17 +2141,26 @@
           if (DOM.btnShare) DOM.btnShare.classList.add('hidden');
         }
         
+        // Fechar o compartilhamento
         if (DOM.shareModal && DOM.shareModal.classList.contains('active')) {
           DOM.shareModal.classList.remove('active');
         }
         
+        // Resetar estado
         state.currentLightboxFile = null;
         state.shareImageData = null;
         state.lightboxFiles = [];
         state.lightboxIndex = 0;
+        
+        // Restaurar scroll
         document.body.style.overflow = '';
+        
+        // Redirecionar para index.html
         window.location.href = 'index.html';
-      };
+      }
+
+      // EXPOR A FUNÇÃO GLOBALMENTE
+      window.voltarParaPrincipal = voltarParaPrincipal;
 
       // ============================================================
       // 20. ADMIN - EDITAR GRID
@@ -2224,12 +2248,12 @@
         const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
 
         if (!token) {
-          alert('❌ Token necessário para excluir arquivos do GitHub! Configure na aba GitHub.');
+          alert('❌ Token necessário para excluir arquivos do GitHub!');
           return;
         }
 
         if (!owner || !repo) {
-          alert('❌ Configure o dono e nome do repositório primeiro!');
+          alert('❌ Configure o dono e nome do repositório!');
           return;
         }
 
@@ -2362,7 +2386,92 @@
       }
 
       // ============================================================
-      // 24. ADMIN - UPLOAD PARA GITHUB
+      // 24. ADMIN - SALVAR MENSAGEM NO GITHUB
+      // ============================================================
+      if (DOM.adminSyncMensagemBtn) {
+        DOM.adminSyncMensagemBtn.addEventListener('click', async function() {
+          const token = localStorage.getItem(STORAGE_GITHUB_TOKEN) || DOM.adminGitHubToken.value;
+          const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || DOM.adminGitHubOwner.value;
+          const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || DOM.adminGitHubRepo.value;
+          const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || DOM.adminGitHubBranch.value || 'main';
+          const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
+
+          const texto = DOM.adminMensagemInput.value.trim();
+          if (!texto) {
+            DOM.adminMensagemStatus.textContent = '⚠️ Digite uma mensagem.';
+            DOM.adminMensagemStatus.style.color = '#ffb74d';
+            return;
+          }
+
+          if (!token || !owner || !repo) {
+            DOM.adminMensagemStatus.textContent = '❌ Configure token e repositório!';
+            DOM.adminMensagemStatus.style.color = '#ef5350';
+            return;
+          }
+
+          DOM.adminSyncMensagemBtn.disabled = true;
+          DOM.adminSyncMensagemBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+          try {
+            const fileName = 'mensagem.txt';
+            const filePath = path + '/' + fileName;
+            const base64Data = btoa(unescape(encodeURIComponent(texto)));
+
+            let sha = null;
+            try {
+              const checkUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+              const checkResponse = await fetch(checkUrl, {
+                headers: { 'Authorization': `token ${token}` }
+              });
+              if (checkResponse.ok) {
+                const data = await checkResponse.json();
+                sha = data.sha;
+              }
+            } catch (e) {}
+
+            const uploadUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+            const payload = {
+              message: `Atualizar mensagem da página inicial`,
+              content: base64Data,
+              branch: branch
+            };
+            if (sha) {
+              payload.sha = sha;
+            }
+
+            const response = await fetch(uploadUrl, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+              localStorage.setItem(STORAGE_MENSAGEM, texto);
+              if (DOM.mensagemTexto) DOM.mensagemTexto.textContent = texto;
+              if (DOM.adminPreviewMensagem) DOM.adminPreviewMensagem.textContent = texto;
+              
+              DOM.adminMensagemStatus.textContent = '✅ Mensagem salva no GitHub!';
+              DOM.adminMensagemStatus.style.color = '#4caf50';
+              log('Mensagem salva no GitHub:', texto);
+            } else {
+              const errorData = await response.json();
+              throw new Error(errorData.message || 'Erro ao salvar');
+            }
+          } catch (error) {
+            DOM.adminMensagemStatus.textContent = `❌ ${error.message}`;
+            DOM.adminMensagemStatus.style.color = '#ef5350';
+          }
+
+          DOM.adminSyncMensagemBtn.disabled = false;
+          DOM.adminSyncMensagemBtn.innerHTML = '<i class="fab fa-github"></i> Salvar no GitHub';
+        });
+      }
+
+      // ============================================================
+      // 25. ADMIN - UPLOAD PARA GITHUB
       // ============================================================
       function updateAdminUploadList() {
         if (!DOM.adminUploadFileList) return;
@@ -2591,7 +2700,7 @@
       }
 
       // ============================================================
-      // 25. ADMIN - TESTAR GITHUB CONEXÃO
+      // 26. ADMIN - TESTAR GITHUB CONEXÃO
       // ============================================================
       if (DOM.adminTestGitHubBtn) {
         DOM.adminTestGitHubBtn.addEventListener('click', async function() {
@@ -2628,7 +2737,7 @@
       }
 
       // ============================================================
-      // 26. BAIXAR IMAGEM
+      // 27. BAIXAR IMAGEM
       // ============================================================
       function baixarImagem() {
         if (!state.currentLightboxFile) {
@@ -2687,7 +2796,7 @@
       }
 
       // ============================================================
-      // 27. COMPARTILHAR IMAGEM
+      // 28. COMPARTILHAR IMAGEM
       // ============================================================
       const shareApps = [
         { id: 'whatsapp', name: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366' },
@@ -2849,7 +2958,7 @@
       }
 
       // ============================================================
-      // 28. COPIAR E-MAIL
+      // 29. COPIAR E-MAIL
       // ============================================================
       if (DOM.copyBtn) {
         DOM.copyBtn.addEventListener('click', async () => {
@@ -2883,12 +2992,21 @@
       }
 
       // ============================================================
-      // 29. EVENTOS DOS BOTÕES
+      // 30. EVENTOS DOS BOTÕES
       // ============================================================
+
+      // Botão "Voltar" da Galeria - CORRIGIDO
+      if (DOM.btnVoltarGaleria) {
+        DOM.btnVoltarGaleria.addEventListener('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          log('Botão Voltar da galeria clicado!');
+          voltarParaPrincipal();
+        });
+      }
 
       if (DOM.openGalleryBtn) {
         DOM.openGalleryBtn.addEventListener('click', function() {
-          // Se ainda não carregou do GitHub, carregar
           if (!state.githubFilesLoaded) {
             carregarImagensDoGitHub();
           }
@@ -2899,7 +3017,7 @@
       if (DOM.galleryModal) {
         DOM.galleryModal.addEventListener('click', function(e) {
           if (e.target === this) {
-            window.voltarParaPrincipal();
+            voltarParaPrincipal();
           }
         });
       }
@@ -2935,96 +3053,19 @@
       }
 
       // ============================================================
-      // 30. SALVAR MENSAGEM NO GITHUB
-      // ============================================================
-      if (DOM.adminSyncMensagemBtn) {
-        DOM.adminSyncMensagemBtn.addEventListener('click', async function() {
-          const token = localStorage.getItem(STORAGE_GITHUB_TOKEN) || DOM.adminGitHubToken.value;
-          const owner = localStorage.getItem(STORAGE_GITHUB_OWNER) || DOM.adminGitHubOwner.value;
-          const repo = localStorage.getItem(STORAGE_GITHUB_REPO) || DOM.adminGitHubRepo.value;
-          const branch = localStorage.getItem(STORAGE_GITHUB_BRANCH) || DOM.adminGitHubBranch.value || 'main';
-          const path = localStorage.getItem(STORAGE_GITHUB_PATH) || DOM.adminGitHubPath.value || 'imagens';
-
-          const texto = DOM.adminMensagemInput.value.trim();
-          if (!texto) {
-            DOM.adminMensagemStatus.textContent = '⚠️ Digite uma mensagem.';
-            DOM.adminMensagemStatus.style.color = '#ffb74d';
-            return;
-          }
-
-          if (!token || !owner || !repo) {
-            DOM.adminMensagemStatus.textContent = '❌ Configure token e repositório!';
-            DOM.adminMensagemStatus.style.color = '#ef5350';
-            return;
-          }
-
-          DOM.adminSyncMensagemBtn.disabled = true;
-          DOM.adminSyncMensagemBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
-
-          try {
-            const fileName = 'mensagem.txt';
-            const filePath = path + '/' + fileName;
-            const base64Data = btoa(unescape(encodeURIComponent(texto)));
-
-            let sha = null;
-            try {
-              const checkUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-              const checkResponse = await fetch(checkUrl, {
-                headers: { 'Authorization': `token ${token}` }
-              });
-              if (checkResponse.ok) {
-                const data = await checkResponse.json();
-                sha = data.sha;
-              }
-            } catch (e) {}
-
-            const uploadUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-            const payload = {
-              message: `Atualizar mensagem`,
-              content: base64Data,
-              branch: branch
-            };
-            if (sha) {
-              payload.sha = sha;
-            }
-
-            const response = await fetch(uploadUrl, {
-              method: 'PUT',
-              headers: {
-                'Authorization': `token ${token}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-              localStorage.setItem(STORAGE_MENSAGEM_GITHUB, texto);
-              saveMensagemAdmin(texto);
-              DOM.adminMensagemStatus.textContent = '✅ Salva no GitHub!';
-              DOM.adminMensagemStatus.style.color = '#4caf50';
-            } else {
-              const errorData = await response.json();
-              throw new Error(errorData.message || 'Erro ao salvar');
-            }
-          } catch (error) {
-            DOM.adminMensagemStatus.textContent = `❌ ${error.message}`;
-            DOM.adminMensagemStatus.style.color = '#ef5350';
-          }
-
-          DOM.adminSyncMensagemBtn.disabled = false;
-          DOM.adminSyncMensagemBtn.innerHTML = '<i class="fab fa-github"></i> Salvar no GitHub';
-        });
-      }
-
-      // ============================================================
       // 31. INICIALIZAÇÃO
       // ============================================================
-      loadMensagem();
       
-      // CARREGAR IMAGENS DO GITHUB PRIMEIRO
+      // Carregar mensagem do GitHub primeiro
+      setTimeout(async () => {
+        await carregarMensagemDoGitHub();
+        loadMensagem();
+      }, 300);
+
+      // Carregar imagens do GitHub
       setTimeout(async () => {
         await carregarImagensDoGitHub();
-      }, 500);
+      }, 600);
 
       log('App inicializado!');
       log('GitHub Config:', GITHUB_CONFIG);
